@@ -1,7 +1,5 @@
 package jsonschema2scala.generator
 
-import jsonschema2scala.parser.model.JsonSchemaProperty
-
 import scala.annotation.tailrec
 
 trait ScalaGenerator {
@@ -9,6 +7,11 @@ trait ScalaGenerator {
   protected val enumClassNameTag: String = "@enumClassName@"
   protected val classNameTag: String     = "@className@"
   protected val enumsTag: String         = "@enums@"
+
+  private def wrapScalaKeyword(s: String): String = {
+    val scalaKeywords = Seq("type")
+    if (scalaKeywords.contains(s)) s"`$s`" else s
+  }
 
   private def toName(name: String, startWithCapital: Boolean): String = {
     @tailrec
@@ -27,7 +30,7 @@ trait ScalaGenerator {
     iter(init, StringBuilder.newBuilder)
   }
 
-  def toAttributeName(name: String): String = toName(name, startWithCapital = false)
+  def toAttributeName(name: String): String = wrapScalaKeyword(toName(name, startWithCapital = false))
 
   def toClassName(name: String): String = toName(name, startWithCapital = true)
 }

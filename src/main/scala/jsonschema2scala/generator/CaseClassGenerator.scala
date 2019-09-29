@@ -36,7 +36,7 @@ object CaseClassGenerator extends ScalaGenerator {
                   imports.append("import java.time.LocalDateTime\n")
                   "LocalDateTime"
                 case "string" if p.enum.isDefined =>
-                  val enumClassName = toClassName(className + "_" + attributeName)
+                  val enumClassName = toClassName(className + "_" + name)
                   val enumGenerator =
                     if (p.enum.getOrElse(List.empty).exists(_.contains("_"))) ExtendedEnumGenerator
                     else SimpleEnumGenerator
@@ -48,7 +48,7 @@ object CaseClassGenerator extends ScalaGenerator {
               attributeTemplate
                 .replace(attributeNameTag, attributeName)
                 .replace(attributeTypeTag, attributeType)
-            case _ => s"\n\n// TODO $p"
+            case _ => "  //"
           }
         })
         .mkString("", ",\n", "")
