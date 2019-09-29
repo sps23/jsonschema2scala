@@ -2,10 +2,10 @@ package jsonschema2scala.generator
 
 import jsonschema2scala.parser.model.JsonSchemaProperty
 
-object SimpleEnumGenerator extends ScalaGenerator with App {
+object SimpleEnumGenerator extends EnumGenerator {
 
-  val enumTemplate: String = s"""  case object $enumClassNameTag extends $classNameTag"""
-  val template: String =
+  override val enumTemplate: String = s"""  case object $enumClassNameTag extends $classNameTag"""
+  override val template: String =
     s"""
       |import enumeratum._
       |
@@ -15,7 +15,7 @@ object SimpleEnumGenerator extends ScalaGenerator with App {
       |
       |object $classNameTag extends Enum[$classNameTag] {
       |
-      |  val values: IndexedSeq[AccountingTreatment] = findValues
+      |  val values: IndexedSeq[$classNameTag] = findValues
       |
       |$enumsTag
       |}
@@ -24,8 +24,8 @@ object SimpleEnumGenerator extends ScalaGenerator with App {
   def generate(jsonSchemaProperty: JsonSchemaProperty): Option[String] = {
     (jsonSchemaProperty.name, jsonSchemaProperty.enum) match {
       case (Some(name), Some(enum)) =>
-        val className      = toClassName(name)
-        val enumClassNames = enum.map(toClassName)
+        val className: String            = toClassName(name)
+        val enumClassNames: List[String] = enum.map(toClassName)
 
         val enums =
           enumClassNames.map(enumTemplate.replace(enumClassNameTag, _)).mkString("\n")
@@ -35,10 +35,4 @@ object SimpleEnumGenerator extends ScalaGenerator with App {
       case _ => None
     }
   }
-
-  val accounting_treatment_gen = generate(accounting_treatment)
-
-  println("accounting_treatment")
-  println(accounting_treatment)
-  println(accounting_treatment_gen)
 }

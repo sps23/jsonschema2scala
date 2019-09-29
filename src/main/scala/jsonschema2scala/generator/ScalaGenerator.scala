@@ -10,44 +10,24 @@ trait ScalaGenerator {
   protected val classNameTag: String     = "@className@"
   protected val enumsTag: String         = "@enums@"
 
-  def toClassName(name: String): String = {
-
+  private def toName(name: String, startWithCapital: Boolean): String = {
     @tailrec
     def iter(s: List[Char], acc: StringBuilder): String = s match {
-      case Nil              => acc.toString()
-      case '_' :: c :: tail => iter(tail, acc.append(c.toUpper))
+      case Nil                      => acc.toString()
+      case ('_' | ' ') :: c :: tail => iter(tail, acc.append(c.toUpper))
       case c :: tail =>
-        val char = if (acc.isEmpty) c.toUpper else c
-        iter(tail, acc.append(char))
+        iter(tail, acc.append(c))
     }
 
-    iter(name.toList, StringBuilder.newBuilder)
+    val init: List[Char] = if (startWithCapital) name.toList match {
+      case h :: t => h.toUpper :: t
+      case other  => other
+    } else name.toList
+
+    iter(init, StringBuilder.newBuilder)
   }
 
-  val accounting_treatment: JsonSchemaProperty = JsonSchemaProperty(
-    name = Option("accounting_treatment"),
-    description = Option("The accounting treatment in accordance with IAS/IFRS9 accounting principles."),
-    `type` = Option("string"),
-    `$ref` = None,
-    format = None,
-    minimum = None,
-    maximum = None,
-    enum = Option(
-      List(
-        "cb_or_demand",
-        "held_for_trading",
-        "fv_thru_pnl",
-        "fv_mandatorily",
-        "fv_oci",
-        "amortised_cost",
-        "held_for_hedge",
-        "available_for_sale",
-        "loans_and_recs",
-        "held_to_maturity"
-      )),
-    minItems = None,
-    uniqueItems = None,
-    schema = None,
-    property = None,
-  )
+  def toAttributeName(name: String): String = toName(name, startWithCapital = false)
+
+  def toClassName(name: String): String = toName(name, startWithCapital = true)
 }
