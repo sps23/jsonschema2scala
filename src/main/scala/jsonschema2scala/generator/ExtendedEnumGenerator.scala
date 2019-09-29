@@ -9,13 +9,11 @@ object ExtendedEnumGenerator extends EnumGenerator {
   override val enumTemplate: String = s"""  case object $enumClassNameTag extends $classNameTag("$enumNameTag")"""
   override val template: String =
     s"""
-      |import enumeratum._
-      |
-      |import scala.collection.immutable.IndexedSeq
+      |$importsTag
       |
       |sealed abstract class $classNameTag(override val entryName: String) extends EnumEntry
       |
-      |object State extends Enum[$classNameTag] {
+      |object $classNameTag extends Enum[$classNameTag] {
       |
       |  val values: IndexedSeq[$classNameTag] = findValues
       |
@@ -23,7 +21,7 @@ object ExtendedEnumGenerator extends EnumGenerator {
       |}
       |""".stripMargin
 
-  def generate(jsonSchemaProperty: JsonSchemaProperty): Option[String] = {
+  def generate(jsonSchemaProperty: JsonSchemaProperty, includeImports: Boolean): Option[String] = {
     (jsonSchemaProperty.name, jsonSchemaProperty.enum) match {
       case (Some(name), Some(enum)) =>
         val className: String                  = toClassName(name)
@@ -37,7 +35,12 @@ object ExtendedEnumGenerator extends EnumGenerator {
             enumTemplate.replace(enumClassNameTag, enumClassName).replace(enumNameTag, enumName)
           })
           .mkString("\n")
-        val generated = template.replace(enumsTag, enums).replaceAll(classNameTag, className)
+
+        val imports: Seq[String] = if (includeImports) EnumGenerator.imports else Seq.empty
+        val generated = template
+          .replace(enumsTag, enums)
+          .replaceAll(classNameTag, className)
+          .replace(importsTag, imports.mkString("\n"))
 
         Option(generated)
       case _ => None

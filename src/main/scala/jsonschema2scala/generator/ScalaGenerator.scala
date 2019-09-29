@@ -4,6 +4,7 @@ import scala.annotation.tailrec
 
 trait ScalaGenerator {
 
+  protected val importsTag: String       = "@imports@"
   protected val enumClassNameTag: String = "@enumClassName@"
   protected val classNameTag: String     = "@className@"
   protected val enumsTag: String         = "@enums@"

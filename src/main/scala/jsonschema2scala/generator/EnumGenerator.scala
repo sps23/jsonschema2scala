@@ -7,15 +7,20 @@ trait EnumGenerator extends ScalaGenerator {
   def enumTemplate: String
   def template: String
 
-  def generate(jsonSchemaProperty: JsonSchemaProperty): Option[String]
+  def generate(jsonSchemaProperty: JsonSchemaProperty, includeImports: Boolean): Option[String]
 }
 
 object EnumGenerator {
 
-  def generate(jsonSchemaProperty: JsonSchemaProperty): Option[String] = {
+  val imports: Seq[String] = Seq(
+    "import enumeratum._",
+    "import scala.collection.immutable.IndexedSeq"
+  )
+
+  def generate(jsonSchemaProperty: JsonSchemaProperty, includeImports: Boolean): Option[String] = {
     val enumGenerator =
       if (jsonSchemaProperty.enum.getOrElse(List.empty).exists(_.contains("_"))) ExtendedEnumGenerator
       else SimpleEnumGenerator
-    Option(enumGenerator.generate(jsonSchemaProperty).getOrElse(""))
+    Option(enumGenerator.generate(jsonSchemaProperty, includeImports).getOrElse(""))
   }
 }

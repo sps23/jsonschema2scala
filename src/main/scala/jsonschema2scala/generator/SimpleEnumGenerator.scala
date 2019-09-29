@@ -7,9 +7,7 @@ object SimpleEnumGenerator extends EnumGenerator {
   override val enumTemplate: String = s"""  case object $enumClassNameTag extends $classNameTag"""
   override val template: String =
     s"""
-      |import enumeratum._
-      |
-      |import scala.collection.immutable.IndexedSeq
+      |$importsTag
       |
       |sealed trait $classNameTag extends EnumEntry
       |
@@ -21,7 +19,7 @@ object SimpleEnumGenerator extends EnumGenerator {
       |}
       |""".stripMargin
 
-  def generate(jsonSchemaProperty: JsonSchemaProperty): Option[String] = {
+  def generate(jsonSchemaProperty: JsonSchemaProperty, includeImports: Boolean): Option[String] = {
     (jsonSchemaProperty.name, jsonSchemaProperty.enum) match {
       case (Some(name), Some(enum)) =>
         val className: String            = toClassName(name)
@@ -29,7 +27,11 @@ object SimpleEnumGenerator extends EnumGenerator {
 
         val enums =
           enumClassNames.map(enumTemplate.replace(enumClassNameTag, _)).mkString("\n")
-        val generated = template.replace(enumsTag, enums).replaceAll(classNameTag, className)
+        val imports: Seq[String] = if (includeImports) EnumGenerator.imports else Seq.empty
+        val generated = template
+          .replace(enumsTag, enums)
+          .replaceAll(classNameTag, className)
+          .replace(importsTag, imports.mkString("\n"))
 
         Option(generated)
       case _ => None

@@ -36,7 +36,7 @@ object Main extends App {
     schema = None,
     property = None,
   )
-  val accounting_treatment_gen = enumGenerator.generate(accounting_treatment).getOrElse("")
+  val accounting_treatment_gen = enumGenerator.generate(accounting_treatment, includeImports = true).getOrElse("")
 
   println("accounting_treatment")
   println(accounting_treatment)
@@ -64,15 +64,27 @@ object Main extends App {
   println("\n\ngeneratedEntity")
   println(generatedEntity.getOrElse(""))
 
-//  val commonInput: String        = Source.fromResource("v1-dev/common.json").getLines().mkString
-//  val commonInputParsed: JObject = parse(commonInput).asInstanceOf[JObject]
-//  //  println(commonInputParsed.toString)
-//  //  val commonJsonSchema: Option[JsonSchema]                   = JsonSchema.from(commonInputParsed)
-//  val commonJsonProperties: Option[List[JsonSchemaProperty]] = JsonSchema.propertiesFrom(commonInputParsed)
-//  println("\n\ncommonJsonProperties")
-//  println(commonJsonProperties)
-//
-//  val generatedCommon: List[String] = commonJsonProperties.map(_.flatMap(EnumGenerator.generate)).getOrElse(List.empty)
-//  println("\n\ngeneratedCommon")
-//  println(generatedCommon.mkString("\n"))
+  val securityInput: String        = Source.fromResource("v1-dev/security.json").getLines().mkString
+  val securityInputParsed: JObject = parse(securityInput).asInstanceOf[JObject]
+  //  println(securityInputParsed.toString)
+  val securityJsonSchema: Option[JsonSchema] = JsonSchema.from(securityInputParsed)
+  println("\n\nsecurityJsonSchema")
+  println(securityJsonSchema)
+
+  val generatedSecurity = securityJsonSchema.flatMap(CaseClassGenerator.generate)
+  println("\n\ngeneratedSecurity")
+  println(generatedSecurity.getOrElse(""))
+
+  val commonInput: String        = Source.fromResource("v1-dev/common.json").getLines().mkString
+  val commonInputParsed: JObject = parse(commonInput).asInstanceOf[JObject]
+  //  println(commonInputParsed.toString)
+  //  val commonJsonSchema: Option[JsonSchema]                   = JsonSchema.from(commonInputParsed)
+  val commonJsonProperties: Option[List[JsonSchemaProperty]] = JsonSchema.propertiesFrom(commonInputParsed)
+  println("\n\ncommonJsonProperties")
+  println(commonJsonProperties)
+
+  val generatedCommon: List[String] =
+    commonJsonProperties.map(_.flatMap(EnumGenerator.generate(_, includeImports = true))).getOrElse(List.empty)
+  println("\n\ngeneratedCommon")
+  println(generatedCommon.mkString("\n"))
 }
