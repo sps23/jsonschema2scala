@@ -28,8 +28,8 @@ object CaseClassGenerator extends ScalaGenerator {
       val className: String      = toClassName(title)
       val attributes: String = jsonSchema.properties
         .map(p => {
-          (p.name, p.`type`) match {
-            case (Some(name), Some(t)) =>
+          (p.name, p.`type`, p.`$ref`) match {
+            case (Some(name), Some(t), None) =>
               val attributeName = toAttributeName(name)
               val attributeType = t match {
                 case "string" if p.format.contains("date-time") =>
@@ -41,7 +41,12 @@ object CaseClassGenerator extends ScalaGenerator {
                   enumClassName
                 case other => toClassName(other)
               }
-
+              attributeTemplate
+                .replace(attributeNameTag, attributeName)
+                .replace(attributeTypeTag, attributeType)
+            case (Some(name), None, Some(ref)) =>
+              val attributeName = toAttributeName(name)
+              val attributeType = toRefName(ref)
               attributeTemplate
                 .replace(attributeNameTag, attributeName)
                 .replace(attributeTypeTag, attributeType)

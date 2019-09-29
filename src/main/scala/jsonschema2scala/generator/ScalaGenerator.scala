@@ -33,4 +33,9 @@ trait ScalaGenerator {
   def toAttributeName(name: String): String = wrapScalaKeyword(toName(name, startWithCapital = false))
 
   def toClassName(name: String): String = toName(name, startWithCapital = true)
+
+  def toRefName(ref: String): String = {
+    val name: String = ref.substring(ref.lastIndexOf("#/") + 2)
+    toClassName(name)
+  }
 }

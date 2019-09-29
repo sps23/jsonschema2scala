@@ -64,15 +64,15 @@ object Main extends App {
   println("\n\ngeneratedEntity")
   println(generatedEntity.getOrElse(""))
 
-  val commonInput: String        = Source.fromResource("v1-dev/common.json").getLines().mkString
-  val commonInputParsed: JObject = parse(commonInput).asInstanceOf[JObject]
-  //  println(commonInputParsed.toString)
-  //  val commonJsonSchema: Option[JsonSchema]                   = JsonSchema.from(commonInputParsed)
-  val commonJsonProperties: Option[List[JsonSchemaProperty]] = JsonSchema.propertiesFrom(commonInputParsed)
-  println("\n\ncommonJsonProperties")
-  println(commonJsonProperties)
-
-  val generatedCommon: List[String] = commonJsonProperties.map(_.flatMap(EnumGenerator.generate)).getOrElse(List.empty)
-  println("\n\ngeneratedCommon")
-  println(generatedCommon.mkString("\n"))
+//  val commonInput: String        = Source.fromResource("v1-dev/common.json").getLines().mkString
+//  val commonInputParsed: JObject = parse(commonInput).asInstanceOf[JObject]
+//  //  println(commonInputParsed.toString)
+//  //  val commonJsonSchema: Option[JsonSchema]                   = JsonSchema.from(commonInputParsed)
+//  val commonJsonProperties: Option[List[JsonSchemaProperty]] = JsonSchema.propertiesFrom(commonInputParsed)
+//  println("\n\ncommonJsonProperties")
+//  println(commonJsonProperties)
+//
+//  val generatedCommon: List[String] = commonJsonProperties.map(_.flatMap(EnumGenerator.generate)).getOrElse(List.empty)
+//  println("\n\ngeneratedCommon")
+//  println(generatedCommon.mkString("\n"))
 }
