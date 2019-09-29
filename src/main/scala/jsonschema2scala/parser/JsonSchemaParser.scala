@@ -29,20 +29,20 @@ object JsonSchemaParser extends App {
   println("\n\nderivativeJsonSchema")
   println(derivativeJsonSchema)
 
-  val commonInput: String        = Source.fromResource("v1-dev/common.json").getLines().mkString
-  val commonInputParsed: JObject = parse(commonInput).asInstanceOf[JObject]
-//  println(commonInputParsed.toString)
-  val commonJsonSchema: Option[JsonSchema]                   = JsonSchema.from(commonInputParsed)
-  val commonJsonProperties: Option[List[JsonSchemaProperty]] = JsonSchema.propertiesFrom(commonInputParsed)
-//  println("\n\ncommonJsonSchema")
-//  println(commonJsonSchema)
-  println("\n\ncommonJsonProperties")
-  println(commonJsonProperties)
-
   val issuerInput: String = Source.fromResource("v1-dev/issuer.json").getLines().mkString
   val issuerParsed        = parse(issuerInput).asInstanceOf[JObject]
   println(issuerParsed.toString)
   val issuerJsonSchema: Option[JsonSchema] = JsonSchema.from(issuerParsed)
   println("\n\nissuerJsonSchema")
   println(issuerJsonSchema)
+
+  val commonInput: String        = Source.fromResource("v1-dev/common.json").getLines().mkString
+  val commonInputParsed: JObject = parse(commonInput).asInstanceOf[JObject]
+  //  println(commonInputParsed.toString)
+  val commonJsonSchema: Option[JsonSchema]                   = JsonSchema.from(commonInputParsed)
+  val commonJsonProperties: Option[List[JsonSchemaProperty]] = JsonSchema.propertiesFrom(commonInputParsed)
+  //  println("\n\ncommonJsonSchema")
+  //  println(commonJsonSchema)
+  println("\n\ncommonJsonProperties")
+  println(commonJsonProperties)
 }

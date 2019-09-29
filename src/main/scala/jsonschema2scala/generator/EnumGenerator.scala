@@ -9,3 +9,13 @@ trait EnumGenerator extends ScalaGenerator {
 
   def generate(jsonSchemaProperty: JsonSchemaProperty): Option[String]
 }
+
+object EnumGenerator {
+
+  def generate(jsonSchemaProperty: JsonSchemaProperty): Option[String] = {
+    val enumGenerator =
+      if (jsonSchemaProperty.enum.getOrElse(List.empty).exists(_.contains("_"))) ExtendedEnumGenerator
+      else SimpleEnumGenerator
+    Option(enumGenerator.generate(jsonSchemaProperty).getOrElse(""))
+  }
+}

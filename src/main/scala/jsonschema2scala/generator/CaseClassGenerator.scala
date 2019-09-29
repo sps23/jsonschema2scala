@@ -37,10 +37,7 @@ object CaseClassGenerator extends ScalaGenerator {
                   "LocalDateTime"
                 case "string" if p.enum.isDefined =>
                   val enumClassName = toClassName(className + "_" + name)
-                  val enumGenerator =
-                    if (p.enum.getOrElse(List.empty).exists(_.contains("_"))) ExtendedEnumGenerator
-                    else SimpleEnumGenerator
-                  enums.append(enumGenerator.generate(p.copy(name = Option(enumClassName))).getOrElse(""))
+                  enums.append(EnumGenerator.generate(p.copy(name = Option(enumClassName))).getOrElse(""))
                   enumClassName
                 case other => toClassName(other)
               }
