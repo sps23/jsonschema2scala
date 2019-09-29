@@ -38,4 +38,11 @@ object JsonSchemaParser extends App {
 //  println(commonJsonSchema)
   println("\n\ncommonJsonProperties")
   println(commonJsonProperties)
+
+  val issuerInput: String = Source.fromResource("v1-dev/issuer.json").getLines().mkString
+  val issuerParsed        = parse(issuerInput).asInstanceOf[JObject]
+  println(issuerParsed.toString)
+  val issuerJsonSchema: Option[JsonSchema] = JsonSchema.from(issuerParsed)
+  println("\n\nissuerJsonSchema")
+  println(issuerJsonSchema)
 }
