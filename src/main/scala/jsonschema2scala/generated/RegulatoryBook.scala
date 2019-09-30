@@ -6,7 +6,7 @@ import scala.collection.immutable.IndexedSeq
 
 sealed abstract class RegulatoryBook(override val entryName: String) extends EnumEntry
 
-object State extends Enum[RegulatoryBook] {
+object RegulatoryBook extends Enum[RegulatoryBook] {
 
   val values: IndexedSeq[RegulatoryBook] = findValues
 

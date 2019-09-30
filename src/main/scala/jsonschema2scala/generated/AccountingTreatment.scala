@@ -6,7 +6,7 @@ import scala.collection.immutable.IndexedSeq
 
 sealed abstract class AccountingTreatment(override val entryName: String) extends EnumEntry
 
-object State extends Enum[AccountingTreatment] {
+object AccountingTreatment extends Enum[AccountingTreatment] {
 
   val values: IndexedSeq[AccountingTreatment] = findValues
 

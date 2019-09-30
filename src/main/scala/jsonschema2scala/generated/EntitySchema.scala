@@ -8,7 +8,7 @@ import scala.collection.immutable.IndexedSeq
 
 sealed abstract class EntitySchemaType(override val entryName: String) extends EnumEntry
 
-object State extends Enum[EntitySchemaType] {
+object EntitySchemaType extends Enum[EntitySchemaType] {
 
   val values: IndexedSeq[EntitySchemaType] = findValues
 
