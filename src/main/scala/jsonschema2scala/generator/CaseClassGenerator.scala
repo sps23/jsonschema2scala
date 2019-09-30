@@ -30,10 +30,10 @@ object CaseClassGenerator extends ScalaGenerator {
       val className: String    = toClassName(title)
       val attributes: String = jsonSchema.properties
         .map(p => {
-          (p.name, p.`type`, p.`$ref`, p.property) match {
-            case (Some(name), Some(t), None, None) =>
-              val attributeName = toAttributeName(name)
-              val attributeType = t match {
+          (p.name, p.`type`, p.`$ref`) match {
+            case (Some(name), Some(t), None) =>
+              val attributeName: String = toAttributeName(name)
+              val attributeType: String = t match {
                 case "string" if p.format.contains("date-time") =>
                   imports.add("import java.time.LocalDateTime")
                   "LocalDateTime"
@@ -43,12 +43,24 @@ object CaseClassGenerator extends ScalaGenerator {
                   enums.append(
                     EnumGenerator.generate(p.copy(name = Option(enumClassName)), includeImports = false).getOrElse(""))
                   enumClassName
+                case "array" =>
+                  (p.property, p.schema) match {
+                    case (Some(pp), None) =>
+                      (pp.`type`, pp.format) match {
+                        case (Some("string"), Some("date-time")) =>
+                          imports.add("import java.time.LocalDateTime")
+                          "List[LocalDateTime]"
+                        case (Some(tt), None) => s"List[${toClassName(tt)}]"
+                        case _                => "Nothing"
+                      }
+                    case (None, Some(schema)) => "AnyVal" //TODO
+                  }
                 case other => toClassName(other)
               }
               attributeTemplate
                 .replace(attributeNameTag, attributeName)
                 .replace(attributeTypeTag, attributeType)
-            case (Some(name), None, Some(ref), None) =>
+            case (Some(name), None, Some(ref)) =>
               val attributeName = toAttributeName(name)
               val attributeType = toRefName(ref)
               attributeTemplate
