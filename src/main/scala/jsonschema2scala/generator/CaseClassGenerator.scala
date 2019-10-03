@@ -12,7 +12,8 @@ object CaseClassGenerator extends ScalaGenerator {
   protected val attributeNameTag: String = "@attributeName@"
   protected val attributeTypeTag: String = "@attributeType@"
 
-  val attributeTemplate: String = s"""  $attributeNameTag: $attributeTypeTag"""
+  val attributeTemplateReq: String = s"""  $attributeNameTag: $attributeTypeTag"""
+  val attributeTemplateOpt: String = s"""  $attributeNameTag: Option[$attributeTypeTag]"""
   val template: String =
     s"""$packageTag
        |
@@ -29,6 +30,10 @@ object CaseClassGenerator extends ScalaGenerator {
       val imports: mutable.HashSet[String]              = mutable.HashSet.empty
       val innerClasses: mutable.HashMap[String, String] = mutable.HashMap.empty
       val className: String                             = toClassName(title)
+
+      def attributeTemplate(name: String): String =
+        if (jsonSchema.required.contains(name)) attributeTemplateReq else attributeTemplateOpt
+
       val attributes: String = jsonSchema.properties
         .map(p => {
           (p.name, p.`type`, p.`$ref`) match {
@@ -66,13 +71,13 @@ object CaseClassGenerator extends ScalaGenerator {
                   }
                 case other => toClassName(other)
               }
-              attributeTemplate
+              attributeTemplate(name)
                 .replace(attributeNameTag, attributeName)
                 .replace(attributeTypeTag, attributeType)
             case (Some(name), None, Some(ref)) =>
               val attributeName = toAttributeName(name)
               val attributeType = toRefName(ref)
-              attributeTemplate
+              attributeTemplate(name)
                 .replace(attributeNameTag, attributeName)
                 .replace(attributeTypeTag, attributeType)
             case _ => "  //"
