@@ -1,7 +1,7 @@
 package jsonschema2scala.parser.model
 
-import org.json4s.{DefaultFormats, Formats, JObject}
 import org.json4s.JsonAST.JValue
+import org.json4s.{DefaultFormats, Formats, JObject}
 
 case class JsonSchemaProperty(name: Option[String],
                               description: Option[String],
@@ -14,7 +14,8 @@ case class JsonSchemaProperty(name: Option[String],
                               minItems: Option[Int],
                               uniqueItems: Option[Boolean],
                               schema: Option[JsonSchema],
-                              property: Option[JsonSchemaProperty])
+                              property: Option[JsonSchemaProperty],
+                              isOverride: Boolean = false)
 
 object JsonSchemaProperty {
 

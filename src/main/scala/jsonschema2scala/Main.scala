@@ -42,17 +42,7 @@ object Main extends App {
 //  println(accounting_treatment)
 //  println(accounting_treatment_gen)
 //
-//  val customerInput: String        = Source.fromResource("v1-dev/customer.json").getLines().mkString
-//  val customerInputParsed: JObject = parse(customerInput).asInstanceOf[JObject]
-//  //  println(customerInputParsed.toString)
-//  val customerJsonSchema: Option[JsonSchema] = JsonSchema.from(customerInputParsed)
-//  println("\n\ncustomerJsonSchema")
-//  println(customerJsonSchema)
-//
-//  val generatedCustomer = customerJsonSchema.flatMap(CaseClassGenerator.generate)
-//  println("\n\ngeneratedCustomer")
-//  println(generatedCustomer.getOrElse(""))
-//
+
   val entityInput: String        = Source.fromResource("v1-dev/entity.json").getLines().mkString
   val entityInputParsed: JObject = parse(entityInput).asInstanceOf[JObject]
   //  println(entityInputParsed.toString)
@@ -60,10 +50,26 @@ object Main extends App {
   println("\n\nentityJsonSchema")
   println(entityJsonSchema)
 
-  val generatedEntity =
-    entityJsonSchema.flatMap(CaseClassGenerator.generate(_, List("jsonschema2scala.generated.entity")))
-  println("\n\ngeneratedEntity")
-  println(generatedEntity.getOrElse(""))
+//  val generatedEntity =
+//    entityJsonSchema.flatMap(CaseClassGenerator.generate(_, List("jsonschema2scala.generated.entity")))
+//  println("\n\ngeneratedEntity")
+//  println(generatedEntity.getOrElse(""))
+
+  val customerInput: String        = Source.fromResource("v1-dev/customer.json").getLines().mkString
+  val customerInputParsed: JObject = parse(customerInput).asInstanceOf[JObject]
+  //  println(customerInputParsed.toString)
+  val customerJsonSchema: Option[JsonSchema] = JsonSchema.from(customerInputParsed)
+  println("\n\ncustomerJsonSchema")
+  println(customerJsonSchema)
+
+//  val generatedCustomer = customerJsonSchema.flatMap(CaseClassGenerator.generate(_, List("jsonschema2scala.generated")))
+//  println("\n\ngeneratedCustomer")
+//  println(generatedCustomer.getOrElse(""))
+
+  val toGenerate: List[JsonSchema] = List(entityJsonSchema, customerJsonSchema).flatten
+  val generatedAll: Option[String] = CaseClassGenerator.generateAll(toGenerate)
+  println("\n\ngeneratedAll")
+  println(generatedAll.getOrElse(""))
 
 //  val securityInput: String        = Source.fromResource("v1-dev/security.json").getLines().mkString
 //  val securityInputParsed: JObject = parse(securityInput).asInstanceOf[JObject]

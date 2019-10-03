@@ -2,7 +2,7 @@ package jsonschema2scala.generator
 
 import java.io.{File, PrintWriter}
 
-import jsonschema2scala.parser.model.JsonSchema
+import jsonschema2scala.parser.model.{JsonSchema, JsonSchemaProperty}
 
 import scala.collection.mutable
 
@@ -11,9 +11,10 @@ object CaseClassGenerator extends ScalaGenerator {
   protected val attributesTag: String    = "@attributes@"
   protected val attributeNameTag: String = "@attributeName@"
   protected val attributeTypeTag: String = "@attributeType@"
+  protected val extendsTag: String       = "@extends@"
 
-  val attributeTemplateReq: String = s"""  $attributeNameTag: $attributeTypeTag"""
-  val attributeTemplateOpt: String = s"""  $attributeNameTag: Option[$attributeTypeTag]"""
+  val attributeTemplateReq: String = s"""$attributeNameTag: $attributeTypeTag"""
+  val attributeTemplateOpt: String = s"""$attributeNameTag: Option[$attributeTypeTag]"""
   val template: String =
     s"""$packageTag
        |
@@ -21,20 +22,54 @@ object CaseClassGenerator extends ScalaGenerator {
        |
        |case class $classNameTag(
        |$attributesTag
-       |)
+       |)$extendsTag
        |""".stripMargin
 
-  def generate(jsonSchema: JsonSchema, packages: List[String] = List.empty): Option[String] = {
+  def generateAll(jsonSchemas: List[JsonSchema], packages: List[String] = List.empty): Option[String] = {
+
+    @scala.annotation.tailrec
+    def iter(schemas: List[JsonSchema], previous: Map[String, JsonSchema], acc: mutable.StringBuilder): Option[String] =
+      schemas match {
+        case Nil => if (acc.isEmpty) None else Option(acc.toString())
+        case h :: t =>
+          val r = generate(h, packages, previous)
+          r match {
+            case Some(o) => iter(t, previous + (toClassName(h.title.getOrElse("")) -> h), acc.append(o))
+            case None    => iter(t, previous, acc)
+          }
+      }
+
+    iter(jsonSchemas, Map.empty, StringBuilder.newBuilder)
+  }
+
+  def generate(jsonSchema: JsonSchema,
+               packages: List[String] = List.empty,
+               previous: Map[String, JsonSchema] = Map.empty): Option[String] = {
 
     jsonSchema.title.map(title => {
       val imports: mutable.HashSet[String]              = mutable.HashSet.empty
       val innerClasses: mutable.HashMap[String, String] = mutable.HashMap.empty
       val className: String                             = toClassName(title)
 
-      def attributeTemplate(name: String): String =
-        if (jsonSchema.required.contains(name)) attributeTemplateReq else attributeTemplateOpt
+      def attributeTemplate(name: String, isOverride: Boolean): String = {
+        val temp = if (jsonSchema.required.contains(name)) attributeTemplateReq else attributeTemplateOpt
+        (if (isOverride) "  override val " else "  ") + temp
+      }
 
-      val attributes: String = jsonSchema.properties
+      val extend: Option[String] = jsonSchema.allOf.map(_.flatMap(_.`$ref`.map(toRefName))).flatMap(_.headOption)
+
+      val inheritedProperties: List[JsonSchemaProperty] = extend match {
+        case Some(e) =>
+          previous.get(e) match {
+            case Some(s) => s.properties.map(_.copy(isOverride = true))
+            case None    => List.empty
+          }
+        case None => List.empty
+      }
+
+      val jsonSchemaProperties = inheritedProperties ++ jsonSchema.properties
+
+      val attributes: String = jsonSchemaProperties
         .map(p => {
           (p.name, p.`type`, p.`$ref`) match {
             case (Some(name), Some(t), None) =>
@@ -71,13 +106,13 @@ object CaseClassGenerator extends ScalaGenerator {
                   }
                 case other => toClassName(other)
               }
-              attributeTemplate(name)
+              attributeTemplate(name, p.isOverride)
                 .replace(attributeNameTag, attributeName)
                 .replace(attributeTypeTag, attributeType)
             case (Some(name), None, Some(ref)) =>
               val attributeName = toAttributeName(name)
               val attributeType = toRefName(ref)
-              attributeTemplate(name)
+              attributeTemplate(name, p.isOverride)
                 .replace(attributeNameTag, attributeName)
                 .replace(attributeTypeTag, attributeType)
             case _ => "  //"
@@ -90,6 +125,14 @@ object CaseClassGenerator extends ScalaGenerator {
         .replaceImports(imports.toSeq)
         .replace(classNameTag, className)
         .replace(attributesTag, attributes)
+        .replace(extendsTag,
+                 extend
+                   .map(e => {
+                     s" extends $e" + inheritedProperties
+                       .map(p => toAttributeName(p.name.getOrElse("")))
+                       .mkString("(", " ,", ")")
+                   })
+                   .getOrElse(""))
 
       val path = new File(".").getCanonicalPath
       val pw   = new PrintWriter(new File(path + s"/$className.scala"))

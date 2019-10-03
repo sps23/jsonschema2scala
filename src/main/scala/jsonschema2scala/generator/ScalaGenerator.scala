@@ -21,7 +21,8 @@ trait ScalaGenerator {
     @tailrec
     def iter(s: List[Char], acc: StringBuilder): String = s match {
       case Nil                      => acc.toString()
-      case ('_' | ' ') :: c :: tail => iter(tail, acc.append(c.toUpper))
+      case ' ' :: tail              => acc.toString()
+      case ('_' | '-') :: c :: tail => iter(tail, acc.append(c.toUpper))
       case c :: tail =>
         iter(tail, acc.append(c))
     }
@@ -45,7 +46,7 @@ trait ScalaGenerator {
   def toClassName(className: String, name: String): String = toName(className + "_" + name, startWithCapital = true)
 
   def toRefName(ref: String): String = {
-    val name: String = ref.substring(ref.lastIndexOf("#/") + 2)
+    val name: String = ref.substring(ref.lastIndexOf("/") + 1).replace(".json", "")
     toClassName(name)
   }
 

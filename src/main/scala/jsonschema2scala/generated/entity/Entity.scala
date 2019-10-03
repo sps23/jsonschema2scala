@@ -3,7 +3,7 @@ package entity
 
 import java.time.LocalDateTime
 
-case class EntitySchema(
+case class Entity(
     id: String,
     date: LocalDateTime,
     addressCity: Option[String],
@@ -21,6 +21,6 @@ case class EntitySchema(
     riskCountryCode: Option[CountryCode],
     sicCode: Option[Int],
     source: Option[String],
-    `type`: Option[EntitySchemaType],
+    `type`: Option[EntityType],
     versionId: Option[String]
 )
