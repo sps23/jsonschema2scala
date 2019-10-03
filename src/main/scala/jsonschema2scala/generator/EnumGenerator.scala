@@ -18,10 +18,10 @@ object EnumGenerator {
   )
 
   def generate(jsonSchemaProperty: JsonSchemaProperty, packages: List[String]): Option[String] = {
-    val enum: List[String]   = jsonSchemaProperty.enum.getOrElse(List.empty)
-    val useExtended: Boolean = enum.exists(e => e.contains("_") || e.headOption.exists(_.isLower))
+    val useExtended: Boolean =
+      jsonSchemaProperty.enum.exists(_.exists(e => e.contains("_") || e.headOption.exists(_.isLower)))
     val enumGenerator =
       if (useExtended) ExtendedEnumGenerator else SimpleEnumGenerator
-    Option(enumGenerator.generate(jsonSchemaProperty, packages).getOrElse(""))
+    enumGenerator.generate(jsonSchemaProperty.copy(enum = jsonSchemaProperty.enum.map(_.sorted)), packages)
   }
 }
