@@ -8,7 +8,8 @@ object ExtendedEnumGenerator extends EnumGenerator {
 
   override val enumTemplate: String = s"""  case object $enumClassNameTag extends $classNameTag("$enumNameTag")"""
   override val template: String =
-    s"""
+    s"""$packageTag
+      |
       |$importsTag
       |
       |sealed abstract class $classNameTag(override val entryName: String) extends EnumEntry
@@ -21,7 +22,7 @@ object ExtendedEnumGenerator extends EnumGenerator {
       |}
       |""".stripMargin
 
-  def generate(jsonSchemaProperty: JsonSchemaProperty, includeImports: Boolean): Option[String] = {
+  def generate(jsonSchemaProperty: JsonSchemaProperty, packages: List[String]): Option[String] = {
     (jsonSchemaProperty.name, jsonSchemaProperty.enum) match {
       case (Some(name), Some(enum)) =>
         val className: String                  = toClassName(name)
@@ -36,11 +37,11 @@ object ExtendedEnumGenerator extends EnumGenerator {
           })
           .mkString("\n")
 
-        val imports: Seq[String] = if (includeImports) EnumGenerator.imports else Seq.empty
         val generated = template
+          .replacePackages(packages)
+          .replaceImports(EnumGenerator.imports)
           .replace(enumsTag, enums)
           .replaceAll(classNameTag, className)
-          .replace(importsTag, imports.mkString("\n"))
 
         Option(generated)
       case _ => None

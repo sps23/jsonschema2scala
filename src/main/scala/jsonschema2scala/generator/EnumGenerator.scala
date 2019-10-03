@@ -7,7 +7,7 @@ trait EnumGenerator extends ScalaGenerator {
   def enumTemplate: String
   def template: String
 
-  def generate(jsonSchemaProperty: JsonSchemaProperty, includeImports: Boolean): Option[String]
+  def generate(jsonSchemaProperty: JsonSchemaProperty, packages: List[String]): Option[String]
 }
 
 object EnumGenerator {
@@ -17,10 +17,11 @@ object EnumGenerator {
     "import scala.collection.immutable.IndexedSeq"
   )
 
-  def generate(jsonSchemaProperty: JsonSchemaProperty, includeImports: Boolean): Option[String] = {
+  def generate(jsonSchemaProperty: JsonSchemaProperty, packages: List[String]): Option[String] = {
+    val enum: List[String]   = jsonSchemaProperty.enum.getOrElse(List.empty)
+    val useExtended: Boolean = enum.exists(e => e.contains("_") || e.headOption.exists(_.isLower))
     val enumGenerator =
-      if (jsonSchemaProperty.enum.getOrElse(List.empty).exists(_.contains("_"))) ExtendedEnumGenerator
-      else SimpleEnumGenerator
-    Option(enumGenerator.generate(jsonSchemaProperty, includeImports).getOrElse(""))
+      if (useExtended) ExtendedEnumGenerator else SimpleEnumGenerator
+    Option(enumGenerator.generate(jsonSchemaProperty, packages).getOrElse(""))
   }
 }

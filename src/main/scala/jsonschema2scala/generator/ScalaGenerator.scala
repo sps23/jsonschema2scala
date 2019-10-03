@@ -4,6 +4,9 @@ import scala.annotation.tailrec
 
 trait ScalaGenerator {
 
+  def template: String
+
+  protected val packageTag: String       = "@package@"
   protected val importsTag: String       = "@imports@"
   protected val enumClassNameTag: String = "@enumClassName@"
   protected val classNameTag: String     = "@className@"
@@ -42,5 +45,13 @@ trait ScalaGenerator {
   def toRefName(ref: String): String = {
     val name: String = ref.substring(ref.lastIndexOf("#/") + 2)
     toClassName(name)
+  }
+
+  implicit class StringImprovements(val s: String) {
+    def replacePackages(packages: Seq[String]): String =
+      s.replace(packageTag, packages.map("package " + _).mkString("\n"))
+
+    def replaceImports(imports: Seq[String]): String =
+      s.replace(importsTag, imports.mkString("\n"))
   }
 }

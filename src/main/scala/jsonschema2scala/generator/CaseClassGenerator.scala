@@ -1,5 +1,7 @@
 package jsonschema2scala.generator
 
+import java.io.{File, PrintWriter}
+
 import jsonschema2scala.parser.model.JsonSchema
 
 import scala.collection.mutable
@@ -12,22 +14,21 @@ object CaseClassGenerator extends ScalaGenerator {
 
   val attributeTemplate: String = s"""  $attributeNameTag: $attributeTypeTag"""
   val template: String =
-    s"""
+    s"""$packageTag
+       |
        |$importsTag
-       |$enumsTag
        |
        |case class $classNameTag(
        |$attributesTag
        |)
        |""".stripMargin
 
-  def generate(jsonSchema: JsonSchema): Option[String] = {
+  def generate(jsonSchema: JsonSchema, packages: List[String] = List.empty): Option[String] = {
 
     jsonSchema.title.map(title => {
-      val imports: mutable.HashSet[String] = mutable.HashSet.empty
-//      val imports: StringBuilder     = StringBuilder.newBuilder
-      val enums: StringBuilder = StringBuilder.newBuilder
-      val className: String    = toClassName(title)
+      val imports: mutable.HashSet[String]              = mutable.HashSet.empty
+      val innerClasses: mutable.HashMap[String, String] = mutable.HashMap.empty
+      val className: String                             = toClassName(title)
       val attributes: String = jsonSchema.properties
         .map(p => {
           (p.name, p.`type`, p.`$ref`) match {
@@ -39,9 +40,10 @@ object CaseClassGenerator extends ScalaGenerator {
                   "LocalDateTime"
                 case "string" if p.enum.isDefined =>
                   val enumClassName = toClassName(className + "_" + name)
-                  EnumGenerator.imports.foreach(imports.add)
-                  enums.append(
-                    EnumGenerator.generate(p.copy(name = Option(enumClassName)), includeImports = false).getOrElse(""))
+                  innerClasses.put(enumClassName,
+                                   EnumGenerator
+                                     .generate(p.copy(name = Option(enumClassName)), packages)
+                                     .getOrElse(""))
                   enumClassName
                 case "array" =>
                   (p.property, p.schema) match {
@@ -53,7 +55,8 @@ object CaseClassGenerator extends ScalaGenerator {
                         case (Some(tt), None) => s"List[${toClassName(tt)}]"
                         case _                => "Nothing"
                       }
-                    case (None, Some(schema)) => "AnyVal" //TODO
+                    case (None, Some(s)) => s"AnyVal // $s" //TODO
+                    case _               => s"Any // unexpected" //TODO
                   }
                 case other => toClassName(other)
               }
@@ -71,11 +74,25 @@ object CaseClassGenerator extends ScalaGenerator {
         })
         .mkString("", ",\n", "")
 
-      template
+      val filledInTemplate = template
+        .replacePackages(packages)
+        .replaceImports(imports.toSeq)
         .replace(classNameTag, className)
         .replace(attributesTag, attributes)
-        .replace(importsTag, imports.mkString("\n"))
-        .replace(enumsTag, enums.toString())
+
+      val path = new File(".").getCanonicalPath
+      val pw   = new PrintWriter(new File(path + s"/$className.scala"))
+      pw.write(filledInTemplate)
+      pw.close()
+
+      innerClasses.foreach(tuple => {
+        val (enumName, fileContent) = tuple
+        val pw                      = new PrintWriter(new File(path + s"/$enumName.scala"))
+        pw.write(fileContent)
+        pw.close()
+      })
+
+      innerClasses.values.mkString("\n\n") ++ filledInTemplate
     })
   }
 }
