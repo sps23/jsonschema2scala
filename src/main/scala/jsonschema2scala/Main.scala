@@ -1,9 +1,7 @@
 package jsonschema2scala
 
-import java.io.File
-
-import jsonschema2scala.generator.{CaseClassGenerator, EnumGenerator, ExtendedEnumGenerator}
-import jsonschema2scala.parser.model.{JsonSchema, JsonSchemaProperty}
+import jsonschema2scala.generator.CaseClassGenerator
+import jsonschema2scala.parser.model.JsonSchema
 import org.json4s.JObject
 import org.json4s.jackson.JsonMethods.parse
 
@@ -66,17 +64,17 @@ object Main extends App {
 //  println("\n\ngeneratedEntity")
 //  println(generatedEntity.getOrElse(""))
 //
-  val securityInput: String        = Source.fromResource("v1-dev/security.json").getLines().mkString
-  val securityInputParsed: JObject = parse(securityInput).asInstanceOf[JObject]
-  //  println(securityInputParsed.toString)
-  val securityJsonSchema: Option[JsonSchema] = JsonSchema.from(securityInputParsed)
-  println("\n\nsecurityJsonSchema")
-  println(securityJsonSchema)
-
-  val generatedSecurity =
-    securityJsonSchema.flatMap(CaseClassGenerator.generate(_, List("jsonschema2scala.generated", "security")))
-  println("\n\ngeneratedSecurity")
-  println(generatedSecurity.getOrElse(""))
+//  val securityInput: String        = Source.fromResource("v1-dev/security.json").getLines().mkString
+//  val securityInputParsed: JObject = parse(securityInput).asInstanceOf[JObject]
+//  //  println(securityInputParsed.toString)
+//  val securityJsonSchema: Option[JsonSchema] = JsonSchema.from(securityInputParsed)
+//  println("\n\nsecurityJsonSchema")
+//  println(securityJsonSchema)
+//
+//  val generatedSecurity =
+//    securityJsonSchema.flatMap(CaseClassGenerator.generate(_, List("jsonschema2scala.generated", "security")))
+//  println("\n\ngeneratedSecurity")
+//  println(generatedSecurity.getOrElse(""))
 //
 //  val commonInput: String        = Source.fromResource("v1-dev/common.json").getLines().mkString
 //  val commonInputParsed: JObject = parse(commonInput).asInstanceOf[JObject]
@@ -98,7 +96,7 @@ object Main extends App {
   println("\n\nloanJsonSchema")
   println(loanJsonSchema)
 
-  val generateLoan = loanJsonSchema.flatMap(CaseClassGenerator.generate(_))
+  val generateLoan = loanJsonSchema.flatMap(CaseClassGenerator.generate(_, List("jsonschema2scala.generated.loan")))
   println("\n\ngenerateLoan")
   println(generateLoan.getOrElse(""))
 //

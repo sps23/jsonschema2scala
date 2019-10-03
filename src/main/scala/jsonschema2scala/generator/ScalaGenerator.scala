@@ -42,6 +42,8 @@ trait ScalaGenerator {
     case other     => other
   }
 
+  def toClassName(className: String, name: String): String = toName(className + "_" + name, startWithCapital = true)
+
   def toRefName(ref: String): String = {
     val name: String = ref.substring(ref.lastIndexOf("#/") + 2)
     toClassName(name)

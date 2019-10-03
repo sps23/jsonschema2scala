@@ -39,11 +39,11 @@ object CaseClassGenerator extends ScalaGenerator {
                   imports.add("import java.time.LocalDateTime")
                   "LocalDateTime"
                 case "string" if p.enum.isDefined =>
-                  val enumClassName = toClassName(className + "_" + name)
-                  innerClasses.put(enumClassName,
-                                   EnumGenerator
-                                     .generate(p.copy(name = Option(enumClassName)), packages)
-                                     .getOrElse(""))
+                  val enumClassName = toClassName(className, name)
+                  EnumGenerator
+                    .generate(p.copy(name = Option(enumClassName)), packages)
+                    .foreach(innerClasses.put(enumClassName, _))
+
                   enumClassName
                 case "array" =>
                   (p.property, p.schema) match {
@@ -55,8 +55,14 @@ object CaseClassGenerator extends ScalaGenerator {
                         case (Some(tt), None) => s"List[${toClassName(tt)}]"
                         case _                => "Nothing"
                       }
-                    case (None, Some(s)) => s"AnyVal // $s" //TODO
-                    case _               => s"Any // unexpected" //TODO
+                    case (Some(_), Some(schema)) =>
+                      val classNameFromAttributeName =
+                        if (attributeName.last == 's') attributeName.init else attributeName
+                      val innerSchemaClassName = toClassName(className, classNameFromAttributeName)
+                      generate(schema.copy(title = Option(innerSchemaClassName)), packages)
+                        .foreach(innerClasses.put(innerSchemaClassName, _))
+                      s"List[$innerSchemaClassName]"
+                    case _ => s"Any // unexpected" //TODO
                   }
                 case other => toClassName(other)
               }
