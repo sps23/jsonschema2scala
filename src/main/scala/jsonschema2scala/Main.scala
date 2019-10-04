@@ -66,22 +66,22 @@ object Main extends App {
 //  println("\n\ngeneratedCustomer")
 //  println(generatedCustomer.getOrElse(""))
 
-  val toGenerate: List[JsonSchema] = List(entityJsonSchema, customerJsonSchema).flatten
-  val generatedAll: Option[String] = CaseClassGenerator.generateAll(toGenerate)
-  println("\n\ngeneratedAll")
-  println(generatedAll.getOrElse(""))
+//  val toGenerate: List[JsonSchema] = List(entityJsonSchema, customerJsonSchema).flatten
+//  val generatedAll: Option[String] = CaseClassGenerator.generateAll(toGenerate)
+//  println("\n\ngeneratedAll")
+//  println(generatedAll.getOrElse(""))
 
-//  val securityInput: String        = Source.fromResource("v1-dev/security.json").getLines().mkString
-//  val securityInputParsed: JObject = parse(securityInput).asInstanceOf[JObject]
-//  //  println(securityInputParsed.toString)
-//  val securityJsonSchema: Option[JsonSchema] = JsonSchema.from(securityInputParsed)
-//  println("\n\nsecurityJsonSchema")
-//  println(securityJsonSchema)
-//
-//  val generatedSecurity =
-//    securityJsonSchema.flatMap(CaseClassGenerator.generate(_, List("jsonschema2scala.generated", "security")))
-//  println("\n\ngeneratedSecurity")
-//  println(generatedSecurity.getOrElse(""))
+  val securityInput: String        = Source.fromResource("v1-dev/security.json").getLines().mkString
+  val securityInputParsed: JObject = parse(securityInput).asInstanceOf[JObject]
+  //  println(securityInputParsed.toString)
+  val securityJsonSchema: Option[JsonSchema] = JsonSchema.from(securityInputParsed)
+  println("\n\nsecurityJsonSchema")
+  println(securityJsonSchema)
+
+  val generatedSecurity =
+    securityJsonSchema.flatMap(CaseClassGenerator.generate(_, List("jsonschema2scala.generated", "security")))
+  println("\n\ngeneratedSecurity")
+  println(generatedSecurity.getOrElse(""))
 //
 //  val commonInput: String        = Source.fromResource("v1-dev/common.json").getLines().mkString
 //  val commonInputParsed: JObject = parse(commonInput).asInstanceOf[JObject]
