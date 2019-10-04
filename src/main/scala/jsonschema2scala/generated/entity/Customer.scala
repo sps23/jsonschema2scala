@@ -26,24 +26,4 @@ case class Customer(
     productCount: Option[Int],
     startDate: Option[LocalDateTime],
     status: Option[CustomerStatus]
-) extends Entity(
-      id,
-      date,
-      addressCity,
-      boeIndustryCode,
-      boeSectorCode,
-      countryCode,
-      creditImpaired,
-      cqsStandardised,
-      cqsIrb,
-      intraGroup,
-      leiCode,
-      legalEntityName,
-      name,
-      parentId,
-      riskCountryCode,
-      sicCode,
-      source,
-      `type`,
-      versionId
-    )
+) extends Entity
