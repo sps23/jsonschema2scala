@@ -1,26 +1,27 @@
-package jsonschema2scala.generated
-package entity
+package jsonschema2scala.generated.entity
 
 import java.time.LocalDateTime
 
-trait Entity {
-  def id: String
-  def date: LocalDateTime
-  def addressCity: Option[String]
-  def boeIndustryCode: Option[String]
-  def boeSectorCode: Option[String]
-  def countryCode: Option[CountryCode]
-  def creditImpaired: Option[Boolean]
-  def cqsStandardised: Option[Int]
-  def cqsIrb: Option[Int]
-  def intraGroup: Option[Boolean]
-  def leiCode: Option[String]
-  def legalEntityName: Option[String]
-  def name: Option[String]
-  def parentId: Option[String]
-  def riskCountryCode: Option[CountryCode]
-  def sicCode: Option[Int]
-  def source: Option[String]
-  def `type`: Option[EntityType]
-  def versionId: Option[String]
-}
+import jsonschema2scala.generated.CountryCode
+
+case class Entity(
+    id: String,
+    date: LocalDateTime,
+    addressCity: Option[String],
+    boeIndustryCode: Option[String],
+    boeSectorCode: Option[String],
+    countryCode: Option[CountryCode],
+    creditImpaired: Option[Boolean],
+    cqsStandardised: Option[Int],
+    cqsIrb: Option[Int],
+    intraGroup: Option[Boolean],
+    leiCode: Option[String],
+    legalEntityName: Option[String],
+    name: Option[String],
+    parentId: Option[String],
+    riskCountryCode: Option[CountryCode],
+    sicCode: Option[Int],
+    source: Option[String],
+    `type`: Option[EntityType],
+    versionId: Option[String]
+)

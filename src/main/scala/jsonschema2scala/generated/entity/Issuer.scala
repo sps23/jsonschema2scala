@@ -4,7 +4,7 @@ import java.time.LocalDateTime
 
 import jsonschema2scala.generated.CountryCode
 
-case class Customer(
+case class Issuer(
     override val id: String,
     override val date: LocalDateTime,
     override val addressCity: Option[String],
@@ -23,10 +23,7 @@ case class Customer(
     override val sicCode: Option[Int],
     override val source: Option[String],
     override val `type`: Option[EntityType],
-    override val versionId: Option[String],
-    productCount: Option[Int],
-    startDate: Option[LocalDateTime],
-    status: Option[CustomerStatus]
+    override val versionId: Option[String]
 ) extends Entity(
       id,
       date,

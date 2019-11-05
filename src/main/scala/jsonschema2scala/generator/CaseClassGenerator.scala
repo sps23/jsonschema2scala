@@ -67,7 +67,7 @@ object CaseClassGenerator extends ScalaGenerator {
         case None => List.empty
       }
 
-      val jsonSchemaProperties = inheritedProperties ++ jsonSchema.properties
+      val jsonSchemaProperties: List[JsonSchemaProperty] = inheritedProperties ++ jsonSchema.properties
 
       val attributes: String = jsonSchemaProperties
         .map(p => {
@@ -79,12 +79,15 @@ object CaseClassGenerator extends ScalaGenerator {
                   imports.add("import java.time.LocalDateTime")
                   "LocalDateTime"
                 case "string" if p.enum.isDefined =>
-                  val enumClassName = toClassName(className, name)
-                  EnumGenerator
-                    .generate(p.copy(name = Option(enumClassName)), packages)
-                    .foreach(innerClasses.put(enumClassName, _))
-
-                  enumClassName
+                  if (p.isOverride) {
+                    toClassName(extend.getOrElse(className), name)
+                  } else {
+                    val enumClassName = toClassName(className, name)
+                    EnumGenerator
+                      .generate(p.copy(name = Option(enumClassName)), packages)
+                      .foreach(innerClasses.put(enumClassName, _))
+                    enumClassName
+                  }
                 case "array" =>
                   (p.property, p.schema) match {
                     case (Some(pp), None) =>
