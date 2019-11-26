@@ -49,7 +49,7 @@ object CaseClassGenerator extends ScalaGenerator {
     jsonSchema.title.map(title => {
       val imports: mutable.HashSet[String]              = mutable.HashSet.empty
       val innerClasses: mutable.HashMap[String, String] = mutable.HashMap.empty
-      val className: String                             = toClassName(title)
+      val className: String                             = toClassNameFromTitle(title)
 
       def attributeTemplate(name: String, isOverride: Boolean): String = {
         val temp = if (jsonSchema.required.contains(name)) attributeTemplateReq else attributeTemplateOpt
