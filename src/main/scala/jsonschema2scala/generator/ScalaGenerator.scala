@@ -17,7 +17,7 @@ trait ScalaGenerator {
     if (scalaKeywords.contains(s)) s"`$s`" else s
   }
 
-  private def toName(name: String, startWithCapital: Boolean): String = {
+  private[generator] def toName(name: String, startWithCapital: Boolean): String = {
     @tailrec
     def iter(s: List[Char], acc: StringBuilder): String = s match {
       case Nil                      => acc.toString()
@@ -36,6 +36,11 @@ trait ScalaGenerator {
   }
 
   def toAttributeName(name: String): String = wrapScalaKeyword(toName(name, startWithCapital = false))
+
+  def toClassNameFromTitle(title: String): String = {
+    val titleFormatted = title.replace(" Schema", "").replace(' ', '_')
+    toClassName(titleFormatted)
+  }
 
   def toClassName(name: String): String = toName(name, startWithCapital = true) match {
     case "Number"  => "BigDecimal"
