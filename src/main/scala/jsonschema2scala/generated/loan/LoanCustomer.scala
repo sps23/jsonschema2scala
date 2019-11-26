@@ -1,6 +1,6 @@
 package jsonschema2scala.generated.loan
 
-case class LoanSchemaCustomer(
+case class LoanCustomer(
     id: String,
     incomeAmount: Int
 )
