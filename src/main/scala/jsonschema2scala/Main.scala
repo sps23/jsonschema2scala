@@ -1,6 +1,6 @@
 package jsonschema2scala
 
-import jsonschema2scala.generator.CaseClassGenerator
+import jsonschema2scala.generator.CodeGenerator
 import jsonschema2scala.parser.model.JsonSchema
 import org.json4s.JObject
 import org.json4s.jackson.JsonMethods.parse
@@ -42,58 +42,6 @@ object Main extends App {
 //  println(accounting_treatment)
 //  println(accounting_treatment_gen)
 //
-
-//  val entityInput: String        = Source.fromResource("v1-dev/entity.json").getLines().mkString
-//  val entityInputParsed: JObject = parse(entityInput).asInstanceOf[JObject]
-//  //  println(entityInputParsed.toString)
-//  val entityJsonSchema: Option[JsonSchema] = JsonSchema.from(entityInputParsed)
-//  println("\n\nentityJsonSchema")
-//  println(entityJsonSchema)
-
-//  val generatedEntity =
-//    entityJsonSchema.flatMap(CaseClassGenerator.generate(_, List("jsonschema2scala.generated.entity")))
-//  println("\n\ngeneratedEntity")
-//  println(generatedEntity.getOrElse(""))
-
-//  val customerInput: String        = Source.fromResource("v1-dev/customer.json").getLines().mkString
-//  val customerInputParsed: JObject = parse(customerInput).asInstanceOf[JObject]
-//  //  println(customerInputParsed.toString)
-//  val customerJsonSchema: Option[JsonSchema] = JsonSchema.from(customerInputParsed)
-//  println("\n\ncustomerJsonSchema")
-//  println(customerJsonSchema)
-
-//  val generatedCustomer = customerJsonSchema.flatMap(CaseClassGenerator.generate(_, List("jsonschema2scala.generated")))
-//  println("\n\ngeneratedCustomer")
-//  println(generatedCustomer.getOrElse(""))
-
-//  val issuerInput: String        = Source.fromResource("v1-dev/issuer.json").getLines().mkString
-//  val issuerInputParsed: JObject = parse(issuerInput).asInstanceOf[JObject]
-//  //  println(issuerInputParsed.toString)
-//  val issuerJsonSchema: Option[JsonSchema] = JsonSchema.from(issuerInputParsed)
-//  println("\n\nissuerJsonSchema")
-//  println(issuerJsonSchema)
-
-//  val generatedIssuer = issuerJsonSchema.flatMap(CaseClassGenerator.generate(_, List("jsonschema2scala.generated")))
-//  println("\n\ngeneratedIssuer")
-//  println(generatedIssuer.getOrElse(""))
-
-//  val guarantorInput: String        = Source.fromResource("v1-dev/guarantor.json").getLines().mkString
-//  val guarantorInputParsed: JObject = parse(guarantorInput).asInstanceOf[JObject]
-//  //  println(guarantorInputParsed.toString)
-//  val guarantorJsonSchema: Option[JsonSchema] = JsonSchema.from(guarantorInputParsed)
-//  println("\n\nguarantorJsonSchema")
-//  println(guarantorJsonSchema)
-
-  //  val generatedGuarantor = guarantorJsonSchema.flatMap(CaseClassGenerator.generate(_, List("jsonschema2scala.generated")))
-  //  println("\n\ngeneratedGuarantor")
-  //  println(generatedGuarantor.getOrElse(""))
-
-//  val toGenerate: List[JsonSchema] =
-//    List(entityJsonSchema, customerJsonSchema, issuerJsonSchema, guarantorJsonSchema).flatten
-//  val generatedAll: Option[String] = CaseClassGenerator.generateAll(toGenerate)
-//  println("\n\ngeneratedAll")
-//  println(generatedAll.getOrElse(""))
-
 //
 //  val commonInput: String        = Source.fromResource("v1-dev/common.json").getLines().mkString
 //  val commonInputParsed: JObject = parse(commonInput).asInstanceOf[JObject]
@@ -120,10 +68,20 @@ object Main extends App {
 //  println("\n\ngeneratedCurve")
 //  println(generatedCurve.getOrElse(""))
 
+  val entityJsonSchema: Option[JsonSchema] =
+    JsonSchema.from(parse(Source.fromResource("v1-dev/entity.json").getLines().mkString).asInstanceOf[JObject])
+  val customerJsonSchema: Option[JsonSchema] =
+    JsonSchema.from(parse(Source.fromResource("v1-dev/customer.json").getLines().mkString).asInstanceOf[JObject])
+  val issuerJsonSchema: Option[JsonSchema] =
+    JsonSchema.from(parse(Source.fromResource("v1-dev/issuer.json").getLines().mkString).asInstanceOf[JObject])
+  val guarantorJsonSchema: Option[JsonSchema] =
+    JsonSchema.from(parse(Source.fromResource("v1-dev/guarantor.json").getLines().mkString).asInstanceOf[JObject])
   val securityJsonSchema: Option[JsonSchema] =
     JsonSchema.from(parse(Source.fromResource("v1-dev/security.json").getLines().mkString).asInstanceOf[JObject])
   val accountJsonSchema: Option[JsonSchema] =
     JsonSchema.from(parse(Source.fromResource("v1-dev/account.json").getLines().mkString).asInstanceOf[JObject])
+  val collateralJsonSchema: Option[JsonSchema] =
+    JsonSchema.from(parse(Source.fromResource("v1-dev/collateral.json").getLines().mkString).asInstanceOf[JObject])
   val derivativeJsonSchema: Option[JsonSchema] =
     JsonSchema.from(parse(Source.fromResource("v1-dev/derivative.json").getLines().mkString).asInstanceOf[JObject])
   val derivativeCashFlowJsonSchema: Option[JsonSchema] =
@@ -131,9 +89,19 @@ object Main extends App {
       parse(Source.fromResource("v1-dev/derivative_cash_flow.json").getLines().mkString).asInstanceOf[JObject])
   val loanJsonSchema: Option[JsonSchema] =
     JsonSchema.from(parse(Source.fromResource("v1-dev/loan.json").getLines().mkString).asInstanceOf[JObject])
-  val generated = CaseClassGenerator.generateAll(List(accountJsonSchema,
-                                                      derivativeJsonSchema,
-                                                      derivativeCashFlowJsonSchema,
-                                                      loanJsonSchema,
-                                                      securityJsonSchema).flatten)
+  val generated = CodeGenerator.generateAll(
+    List(
+//      entityJsonSchema,
+//      customerJsonSchema,
+//      issuerJsonSchema,
+//      guarantorJsonSchema,
+//      accountJsonSchema,
+      collateralJsonSchema //,
+//      derivativeJsonSchema,
+//      derivativeCashFlowJsonSchema,
+//      loanJsonSchema,
+//      securityJsonSchema
+    ).flatten)
+//  println("\n\ngenerated")
+//  println(generated.getOrElse(""))
 }

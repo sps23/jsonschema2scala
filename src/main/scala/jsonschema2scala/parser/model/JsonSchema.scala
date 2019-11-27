@@ -1,5 +1,6 @@
 package jsonschema2scala.parser.model
 
+import jsonschema2scala.parser.model.AccountingTreatment.CaseClass
 import org.json4s.{JObject, JValue, _}
 
 case class JsonSchema(schema: Option[String],
@@ -9,7 +10,8 @@ case class JsonSchema(schema: Option[String],
                       allOf: Option[List[JsonSchemaProperty]],
                       properties: List[JsonSchemaProperty],
                       required: List[String],
-                      additionalProperties: Boolean)
+                      additionalProperties: Boolean,
+                      scalaType: JsonSchemaScalaType = CaseClass)
 
 object JsonSchema {
 
