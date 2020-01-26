@@ -1,6 +1,6 @@
 package jsonschema2scala.generator
 
-import java.io.{File, FileWriter, PrintWriter}
+import java.io.{File, PrintWriter}
 
 import scala.collection.mutable
 
@@ -23,19 +23,17 @@ trait ScalaGenerator extends GeneratorUtils {
   }
 
   protected def writeInnerClassesToFiles(innerClasses: mutable.HashMap[String, String], path: String): Unit = {
-    innerClasses.foreach(tuple => {
-      val (enumName, fileContent) = tuple
-      val pw                      = new PrintWriter(new File(path + s"/$enumName.scala"))
-      pw.write(fileContent)
-      pw.close()
-    })
+    innerClasses.foreach {
+      case (enumName, fileContent) =>
+        val pw = new PrintWriter(new File(path + s"/$enumName.scala"))
+        pw.write(fileContent)
+        pw.close()
+    }
   }
 
-  protected def writeFilledTemplateToFile(className: String,
-                                          filledInTemplate: String,
-                                          append: Boolean = false): String = {
+  protected def writeFilledTemplateToFile(className: String, filledInTemplate: String): String = {
     val path = new File(".").getCanonicalPath
-    val pw   = new FileWriter(new File(path + s"/$className.scala"), append)
+    val pw   = new PrintWriter(new File(path + s"/$className.scala"))
     pw.write(filledInTemplate)
     pw.close()
     path
