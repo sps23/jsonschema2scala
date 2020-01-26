@@ -1,5 +1,4 @@
-package jsonschema2scala.generated
-package security
+package jsonschema2scala.generated.security
 
 import enumeratum._
 
@@ -11,9 +10,13 @@ object SecurityPurpose extends Enum[SecurityPurpose] {
 
   val values: IndexedSeq[SecurityPurpose] = findValues
 
+  case object AircraftFinance      extends SecurityPurpose("aircraft_finance")
   case object Collateral           extends SecurityPurpose("collateral")
   case object DerivativeCollateral extends SecurityPurpose("derivative_collateral")
   case object Investment           extends SecurityPurpose("investment")
+  case object NonControlling       extends SecurityPurpose("non_controlling")
   case object Other                extends SecurityPurpose("other")
   case object Reference            extends SecurityPurpose("reference")
+  case object ShareCapital         extends SecurityPurpose("share_capital")
+  case object TradeFinance         extends SecurityPurpose("trade_finance")
 }

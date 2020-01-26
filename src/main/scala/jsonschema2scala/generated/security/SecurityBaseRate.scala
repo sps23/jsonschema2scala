@@ -1,5 +1,4 @@
-package jsonschema2scala.generated
-package security
+package jsonschema2scala.generated.security
 
 import enumeratum._
 
