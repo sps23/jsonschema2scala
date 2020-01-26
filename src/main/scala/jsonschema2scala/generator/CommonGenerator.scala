@@ -1,5 +1,6 @@
 package jsonschema2scala.generator
 
+import jsonschema2scala.parser.model.AccountingTreatment.{CaseClass, Trait}
 import jsonschema2scala.parser.model.{JsonSchema, JsonSchemaProperty}
 
 import scala.collection.mutable
@@ -124,5 +125,20 @@ trait CommonGenerator extends ScalaGenerator {
 
       innerClasses.values.mkString("\n\n") ++ filledInTemplate
     })
+  }
+}
+
+object CommonGenerator {
+
+  private[generator] def chooseGenerator(jsonSchema: JsonSchema): CommonGenerator = jsonSchema.scalaType match {
+    case Trait     => TraitGenerator
+    case CaseClass => CaseClassGenerator
+  }
+
+  def generate(jsonSchema: JsonSchema,
+               packages: List[String] = List.empty,
+               previous: Map[String, JsonSchema]): Option[String] = {
+    val generator: CommonGenerator = chooseGenerator(jsonSchema)
+    generator.generate(jsonSchema, packages, previous)
   }
 }

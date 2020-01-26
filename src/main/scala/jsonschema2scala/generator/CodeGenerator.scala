@@ -1,16 +1,11 @@
 package jsonschema2scala.generator
 
-import jsonschema2scala.parser.model.AccountingTreatment.{CaseClass, Trait}
+import jsonschema2scala.parser.model.AccountingTreatment.Trait
 import jsonschema2scala.parser.model.JsonSchema
 
 import scala.collection.mutable
 
 object CodeGenerator extends GeneratorUtils {
-
-  private def chooseGenerator(jsonSchema: JsonSchema): CommonGenerator = jsonSchema.scalaType match {
-    case Trait     => TraitGenerator
-    case CaseClass => CaseClassGenerator
-  }
 
   def generateAll(jsonSchemas: List[JsonSchema], packages: List[String] = List.empty): Option[String] = {
 
@@ -30,10 +25,9 @@ object CodeGenerator extends GeneratorUtils {
       schemas match {
         case Nil => if (acc.isEmpty) None else Option(acc.toString())
         case h :: t =>
-          val generator = chooseGenerator(h)
-          val r         = generator.generate(h, packages, previous)
-          r match {
-            case Some(o) => iter(t, previous + (generator.toClassName(h.title.getOrElse("")) -> h), acc.append(o))
+          val generated = CommonGenerator.generate(h, packages, previous)
+          generated match {
+            case Some(o) => iter(t, previous + (toClassName(h.title.getOrElse("")) -> h), acc.append(o))
             case None    => iter(t, previous, acc)
           }
       }

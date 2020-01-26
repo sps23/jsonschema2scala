@@ -17,11 +17,16 @@ object EnumGenerator {
     "import scala.collection.immutable.IndexedSeq"
   )
 
+  private[generator] def chooseGenerator(jsonSchemaProperty: JsonSchemaProperty): EnumGenerator = {
+    def useExtended(enums: List[String]): Boolean = enums.exists(enum => enum.contains('_') || enum.exists(_.isLower))
+    jsonSchemaProperty.enum match {
+      case Some(enums) if useExtended(enums) => ExtendedEnumGenerator
+      case _                                 => SimpleEnumGenerator
+    }
+  }
+
   def generate(jsonSchemaProperty: JsonSchemaProperty, packages: List[String]): Option[String] = {
-    val useExtended: Boolean =
-      jsonSchemaProperty.enum.exists(_.exists(e => e.contains("_") || e.headOption.exists(_.isLower)))
-    val enumGenerator =
-      if (useExtended) ExtendedEnumGenerator else SimpleEnumGenerator
+    val enumGenerator = chooseGenerator(jsonSchemaProperty)
     enumGenerator.generate(jsonSchemaProperty.copy(enum = jsonSchemaProperty.enum.map(_.sorted)), packages)
   }
 }

@@ -1,6 +1,6 @@
 package jsonschema2scala
 
-import jsonschema2scala.generator.{ExtendedEnumGenerator, PropertyBasedGenerator, SimpleEnumGenerator, TypeGenerator}
+import jsonschema2scala.generator.PropertyBasedGenerator
 import jsonschema2scala.parser.model.{JsonSchema, JsonSchemaProperty}
 import org.json4s.JObject
 import org.json4s.jackson.JsonMethods.parse
@@ -11,20 +11,9 @@ object Main extends App {
 
   val commonParsed                                           = parse(Source.fromResource("v1-dev/common.json").getLines().mkString).asInstanceOf[JObject]
   val commonJsonProperties: Option[List[JsonSchemaProperty]] = JsonSchema.propertiesFrom(commonParsed)
-  println("\n\ncommonJsonProperties")
-  println(commonJsonProperties)
-
-  def chooseGenerator(jsonSchemaProperty: JsonSchemaProperty): PropertyBasedGenerator = jsonSchemaProperty.enum match {
-    case Some(enums) =>
-      if (enums.exists(enum => enum.contains('_') || enum.exists(_.isLower))) ExtendedEnumGenerator
-      else SimpleEnumGenerator
-    case None => TypeGenerator
-  }
 
   val generatedCommon: List[String] =
-    commonJsonProperties.map(_.flatMap(p => chooseGenerator(p).generate(p, List.empty))).getOrElse(List.empty)
-  println("\n\ngeneratedCommon")
-  println(generatedCommon.mkString("\n"))
+    commonJsonProperties.map(_.flatMap(PropertyBasedGenerator.generate(_, List.empty))).getOrElse(List.empty)
 
 //
 //  val curveInput: String        = Source.fromResource("v1-dev/curve.json").getLines().mkString
