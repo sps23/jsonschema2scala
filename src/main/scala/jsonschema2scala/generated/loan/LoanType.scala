@@ -15,8 +15,6 @@ object LoanType extends Enum[LoanType] {
   case object CommercialProperty extends LoanType("commercial_property")
   case object CreditCard         extends LoanType("credit_card")
   case object CreditFacility     extends LoanType("credit_facility")
-  case object Guarantee          extends LoanType("guarantee")
-  case object LetterOfCredit     extends LoanType("letter_of_credit")
   case object LiquidityFacility  extends LoanType("liquidity_facility")
   case object Mortgage           extends LoanType("mortgage")
   case object MulticcyFacility   extends LoanType("multiccy_facility")
