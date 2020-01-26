@@ -16,14 +16,11 @@ object CodeGenerator extends GeneratorUtils {
 
     val refNames: Set[String] =
       jsonSchemas.flatMap(_.allOf.getOrElse(List.empty).flatMap(_.`$ref`.map(toRefName))).toSet
-    println(s"refNames = ${refNames.mkString("; ")}")
 
     val jsonSchemasSortedByRefs = jsonSchemas
       .map(js =>
         if (refNames.contains(js.title.map(toClassNameFromTitle).getOrElse(""))) js.copy(scalaType = Trait) else js)
       .sortBy(_.scalaType != Trait)
-
-    println("jsonSchemasSortedByRefs: " + jsonSchemasSortedByRefs.map(_.scalaType).mkString(";"))
 
     @scala.annotation.tailrec
     def iter(schemas: List[JsonSchema],

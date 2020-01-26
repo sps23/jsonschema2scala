@@ -27,7 +27,7 @@ trait GeneratorUtils {
     iter(init, StringBuilder.newBuilder)
   }
 
-  def toAttributeName(name: String): String = wrapScalaKeyword(toName(name, startWithCapital = false))
+  def toAttributeName(name: String): String = wrapScalaKeyword(name)
 
   def toClassNameFromTitle(title: String): String = {
     val titleFormatted = title.replace(" Schema", "").replace(' ', '_')

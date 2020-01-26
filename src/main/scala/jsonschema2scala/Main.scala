@@ -9,45 +9,8 @@ import scala.io.Source
 
 object Main extends App {
 
-//  val enumGenerator: EnumGenerator = ExtendedEnumGenerator // SimpleEnumGenerator
-//  val accounting_treatment: JsonSchemaProperty = JsonSchemaProperty(
-//    name = Option("accounting_treatment"),
-//    description = Option("The accounting treatment in accordance with IAS/IFRS9 accounting principles."),
-//    `type` = Option("string"),
-//    `$ref` = None,
-//    format = None,
-//    minimum = None,
-//    maximum = None,
-//    enum = Option(
-//      List(
-//        "cb_or_demand",
-//        "held_for_trading",
-//        "fv_thru_pnl",
-//        "fv_mandatorily",
-//        "fv_oci",
-//        "amortised_cost",
-//        "held_for_hedge",
-//        "available_for_sale",
-//        "loans_and_recs",
-//        "held_to_maturity"
-//      )),
-//    minItems = None,
-//    uniqueItems = None,
-//    schema = None,
-//    property = None,
-//  )
-//  val accounting_treatment_gen = enumGenerator.generate(accounting_treatment, includeImports = true).getOrElse("")
-//
-//  println("accounting_treatment")
-//  println(accounting_treatment)
-//  println(accounting_treatment_gen)
-//
-//
-//  val commonInput: String        = Source.fromResource("v1-dev/common.json").getLines().mkString
-//  val commonInputParsed: JObject = parse(commonInput).asInstanceOf[JObject]
-//  //  println(commonInputParsed.toString)
-//  //  val commonJsonSchema: Option[JsonSchema]                   = JsonSchema.from(commonInputParsed)
-//  val commonJsonProperties: Option[List[JsonSchemaProperty]] = JsonSchema.propertiesFrom(commonInputParsed)
+//  val commonJsonProperties: Option[List[JsonSchemaProperty]] = JsonSchema.propertiesFrom(
+//    parse(Source.fromResource("v1-dev/common.json").getLines().mkString).asInstanceOf[JObject])
 //  println("\n\ncommonJsonProperties")
 //  println(commonJsonProperties)
 //
@@ -91,16 +54,16 @@ object Main extends App {
     JsonSchema.from(parse(Source.fromResource("v1-dev/loan.json").getLines().mkString).asInstanceOf[JObject])
   val generated = CodeGenerator.generateAll(
     List(
-//      entityJsonSchema,
-//      customerJsonSchema,
-//      issuerJsonSchema,
-//      guarantorJsonSchema,
-//      accountJsonSchema,
-      collateralJsonSchema //,
-//      derivativeJsonSchema,
-//      derivativeCashFlowJsonSchema,
-//      loanJsonSchema,
-//      securityJsonSchema
+      entityJsonSchema,
+      customerJsonSchema,
+      issuerJsonSchema,
+      guarantorJsonSchema,
+      accountJsonSchema,
+      collateralJsonSchema,
+      derivativeJsonSchema,
+      derivativeCashFlowJsonSchema,
+      loanJsonSchema,
+      securityJsonSchema
     ).flatten)
 //  println("\n\ngenerated")
 //  println(generated.getOrElse(""))
