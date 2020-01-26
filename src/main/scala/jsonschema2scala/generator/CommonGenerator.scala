@@ -1,7 +1,5 @@
 package jsonschema2scala.generator
 
-import java.io.{File, PrintWriter}
-
 import jsonschema2scala.parser.model.{JsonSchema, JsonSchemaProperty}
 
 import scala.collection.mutable
@@ -18,23 +16,6 @@ trait CommonGenerator extends ScalaGenerator {
 
   val attributeTemplateReq: String = s"""$attributeNameTag: $attributeTypeTag"""
   val attributeTemplateOpt: String = s"""$attributeNameTag: Option[$attributeTypeTag]"""
-
-  protected def writeInnerClassesToFiles(innerClasses: mutable.HashMap[String, String], path: String): Unit = {
-    innerClasses.foreach(tuple => {
-      val (enumName, fileContent) = tuple
-      val pw                      = new PrintWriter(new File(path + s"/$enumName.scala"))
-      pw.write(fileContent)
-      pw.close()
-    })
-  }
-
-  protected def writeFilledTemplateToFile(className: String, filledInTemplate: String): String = {
-    val path = new File(".").getCanonicalPath
-    val pw   = new PrintWriter(new File(path + s"/$className.scala"))
-    pw.write(filledInTemplate)
-    pw.close()
-    path
-  }
 
   protected def fillInTemplate(packages: List[String],
                                imports: mutable.HashSet[String],

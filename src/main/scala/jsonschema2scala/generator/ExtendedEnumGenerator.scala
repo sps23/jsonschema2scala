@@ -43,6 +43,8 @@ object ExtendedEnumGenerator extends EnumGenerator {
           .replace(enumsTag, enums)
           .replaceAll(classNameTag, className)
 
+        writeFilledTemplateToFile(className, generated)
+
         Option(generated)
       case _ => None
     }

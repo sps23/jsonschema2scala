@@ -2,7 +2,7 @@ package jsonschema2scala.generator
 
 import jsonschema2scala.parser.model.JsonSchemaProperty
 
-trait EnumGenerator extends ScalaGenerator {
+trait EnumGenerator extends PropertyBasedGenerator {
 
   def enumTemplate: String
   def template: String
