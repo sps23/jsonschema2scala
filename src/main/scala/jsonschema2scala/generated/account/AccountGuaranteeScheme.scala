@@ -39,4 +39,5 @@ object AccountGuaranteeScheme extends Enum[AccountGuaranteeScheme] {
   case object SeNdo  extends AccountGuaranteeScheme("se_ndo")
   case object SiDgs  extends AccountGuaranteeScheme("si_dgs")
   case object SkDpf  extends AccountGuaranteeScheme("sk_dpf")
+  case object UsFdic extends AccountGuaranteeScheme("us_fdic")
 }
