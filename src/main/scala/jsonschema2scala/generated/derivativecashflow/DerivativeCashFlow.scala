@@ -1,34 +1,33 @@
-package jsonschema2scala.generated.derivativecashflow
+package jsonschema2scala.generated
+package derivativecashflow
 
 import java.time.LocalDateTime
-
-import jsonschema2scala.generated.{CurrencyCode, RegulatoryBook}
 
 case class DerivativeCashFlow(
     id: String,
     date: LocalDateTime,
-    accruedInterest: Option[Int],
-    assetClass: Option[DerivativeCashFlowAssetClass],
-    assetLiability: Option[DerivativeCashFlowAssetLiability],
+    accrued_interest: Option[Int],
+    asset_class: Option[AssetClass],
+    asset_liability: Option[AssetLiability],
     balance: Option[Int],
-    currencyCode: Option[CurrencyCode],
-    customerId: Option[String],
-    derivativeId: Option[String],
+    currency_code: Option[CurrencyCode],
+    customer_id: Option[String],
+    derivative_id: Option[String],
     leg: Option[DerivativeCashFlowLeg],
-    mnaId: Option[String],
-    mtmClean: Option[Int],
-    mtmDirty: Option[Int],
-    notionalAmount: Option[Int],
-    onBalanceSheet: Option[Boolean],
-    paymentDate: Option[LocalDateTime],
-    productName: Option[String],
+    mna_id: Option[String],
+    mtm_clean: Option[Int],
+    mtm_dirty: Option[Int],
+    notional_amount: Option[Int],
+    on_balance_sheet: Option[Boolean],
+    payment_date: Option[LocalDateTime],
+    product_name: Option[String],
     purpose: Option[DerivativeCashFlowPurpose],
-    regulatoryBook: Option[RegulatoryBook],
-    reportingLei: Option[String],
-    reportingEntityName: Option[String],
-    settlementType: Option[DerivativeCashFlowSettlementType],
+    regulatory_book: Option[RegulatoryBook],
+    reporting_lei: Option[String],
+    reporting_entity_name: Option[String],
+    settlement_type: Option[DerivativeCashFlowSettlementType],
     source: Option[String],
-    tradeDate: Option[LocalDateTime],
-    valueDate: Option[LocalDateTime],
-    versionId: Option[String]
+    trade_date: Option[LocalDateTime],
+    value_date: Option[LocalDateTime],
+    version_id: Option[String]
 )
