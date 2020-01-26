@@ -43,9 +43,7 @@
       "type": "integer"
     },
     "asset_liability": {
-      "description": "Is the loan an asset or a liability on the firm's balance sheet?",
-      "type": "string",
-      "enum": ["asset", "liability"]
+        "$ref": "https://raw.githubusercontent.com/SuadeLabs/fire/master/v1-dev/common.json#/asset_liability"
     },
     "balance": {
       "description": "The balance of the loan or capital still to be repaid. Monetary type represented as a naturally positive integer number of cents/pence.",
@@ -60,6 +58,10 @@
       "description": "The unique identifier for the behavioral curve used by the financial institution.",
       "type": "string"
     },
+    "cost_center_code": {
+      "description": "The organizational unit or sub-unit to which costs/profits are booked.",
+      "type": "string"
+    },
     "country_code": {
       "description": "Two-letter country code for product location/jurisdiction. In accordance with ISO 3166-1.",
       "$ref": "https://raw.githubusercontent.com/SuadeLabs/fire/master/v1-dev/common.json#/country_code"
@@ -71,6 +73,10 @@
     },
     "currency_code": {
       "$ref": "https://raw.githubusercontent.com/SuadeLabs/fire/master/v1-dev/common.json#/currency_code"
+    },
+    "customer_id": {
+      "description": "The unique identifier used by the financial institution to identify the customer.",
+      "type": "string"
     },
     "customers": {
       "description": "The list of customers for this loan",
@@ -143,9 +149,20 @@
       "minimum": 0
     },
     "impairment_status": {
-      "description": "The recognition stage for the impairment of the loan.",
+      "description": "The recognition stage for the impairment/expected credit loss of the product.",
       "type": "string",
-      "enum": ["stage_1", "stage_2", "stage_3"]
+      "enum": [
+        "performing",
+        "stage_1",
+        "normal",
+	"watch",
+        "stage_2",
+        "substandard",
+        "non_performing",
+        "stage_3",
+        "doubtful",
+        "loss"
+      ]
     },
     "impairment_type": {
       "description": "The loss event resulting in the impairment of the loan.",
@@ -166,6 +183,10 @@
       "description": "The final payment date for interest payments, often coincides with end_date.",
       "type": "string",
       "format": "date-time"
+    },
+    "ledger_code": {
+      "description": "The internal ledger code or line item name.",
+      "type": "string"
     },
     "limit_amount": {
       "description": "The total credit limit on the loan. Monetary type represented as a naturally positive integer number of cents/pence.",
@@ -240,6 +261,11 @@
       "type": "string",
       "enum": ["fixed", "variable", "tracker", "combined"]
     },
+    "ref_income_amount": {
+      "description": "The reference income used for the customer(s) for this loan. Monetary type represented as an integer number of cents/pence.",
+      "type": "integer",
+      "minimum": 0
+    },
     "regulated": {
       "description": "Is this loan regulated or unregulated?",
       "type": "boolean"
@@ -306,8 +332,7 @@
       "description": "The form of the loan product administered by the financial institution, with regards to common regulatory classifications.",
       "type": "string",
       "enum": [
-        "mortgage", "commercial_property", "commercial", "personal", "auto", "liquidity_facility", "letter_of_credit", "guarantee",
-        "trade_finance", "credit_card", "credit_facility", "multiccy_facility", "nostro", "other"
+        "mortgage", "commercial_property", "commercial", "personal", "auto", "liquidity_facility", "trade_finance", "credit_card", "credit_facility", "multiccy_facility", "nostro", "other"
       ]
     },
     "version_id": {
@@ -326,6 +351,11 @@
     "minimum_balance_eur": {
       "description": "Indicates the minimum balance, in Euros, of each loan within the aggregate.",
       "type": "integer"
+    },
+    "next_repricing_date": {
+      "description": "The date on which the interest rate of the loan will be re-calculated. YYYY-MM-DDTHH:MM:SSZ in accordance with ISO 8601.",
+      "type": "string",
+      "format": "date-time"
     }
   },
   "required": ["id", "date"],

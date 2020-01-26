@@ -25,14 +25,10 @@
       "type": "integer"
     },
     "asset_class": {
-      "description": "The asset class to which the derivative belongs.",
-      "type": "string",
-      "enum": ["co", "cr", "cr_index", "cr_single", "eq", "eq_index", "eq_single", "fx", "ir", "energy", "oil", "gas", "coal", "electricity", "metals", "silver", "gold", "agri", "sugar", "coffee", "corn", "other"]
+      "$ref": "https://raw.githubusercontent.com/SuadeLabs/fire/master/v1-dev/common.json#/asset_class"
     },
     "asset_liability": {
-      "description": "Is the derivative a financial asset or a financial liability on a firm's balance sheet?",
-      "type": "string",
-      "enum": ["asset", "liability"]
+        "$ref": "https://raw.githubusercontent.com/SuadeLabs/fire/master/v1-dev/common.json#/asset_liability"
     },
     "balance": {
       "description": "Outstanding amount including accrued interest. Monetary type represented as a naturally positive integer number of cents/pence.",
@@ -60,6 +56,10 @@
         "type": "string",
         "format": "date-time"
       }
+    },
+    "cost_center_code": {
+      "description": "The organizational unit or sub-unit to which costs/profits are booked.",
+      "type": "string"
     },
     "currency_code": {
       "description": "Actual currency of the underlying reference index, security or asset for the derivative in accordance with ISO 4217 standards. It should be consistent with balance, accrued_interest, guarantee_amount and other monetary amounts.",
@@ -110,6 +110,13 @@
       "description": "The final payment date for interest payments, often coincides with end_date.",
       "type": "string",
       "format": "date-time"
+    },
+    "ledger_code": {
+      "description": "The internal ledger code or line item name.",
+      "type": "string"
+    },
+    "mic_code": {
+      "$ref": "https://raw.githubusercontent.com/SuadeLabs/fire/master/v1-dev/common.json#/mic_code"
     },
     "mna_id": {
       "description": "The unique identifier of the Master Netting Agreement for this derivative cash flow.",
@@ -230,7 +237,7 @@
       "description": "This is the type of the derivative with regards to common regulatory classifications.",
       "type": "string",
       "enum": [
-        "vanilla_swap", "mtm_swap", "option", "call_swaption", "put_swaption", "call_option", "put_option", "future", "forward", "tarf", "xccy", "cds"
+        "vanilla_swap", "mtm_swap", "option", "call_swaption", "put_swaption", "call_option", "put_option", "future", "forward", "tarf", "xccy", "cds", "ois", "spot"
       ]
     },
     "trade_date": {

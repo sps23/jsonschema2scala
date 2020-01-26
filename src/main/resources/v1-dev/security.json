@@ -1,3 +1,4 @@
+
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
   "title": "Security Schema",
@@ -29,9 +30,8 @@
       "type": "integer"
     },
     "asset_liability": {
-      "description": "Is the security (valued at either amortised cost or fair value) an asset or a liability on the firm's balance sheet.",
-      "type": "string",
-      "enum": ["asset", "liability"]
+        "description": "Is the security (valued at either amortised cost or fair value) an asset or a liability on the firm's balance sheet.",
+        "$ref": "https://raw.githubusercontent.com/SuadeLabs/fire/master/v1-dev/common.json#/asset_liability"
     },
     "capital_tier": {
       "description": "The capital tiers based on own funds requirements.",
@@ -43,6 +43,10 @@
       "type": "number",
       "minimum": 0.0,
       "maximum": 1.0
+    },
+    "cost_center_code": {
+      "description": "The organizational unit or sub-unit to which costs/profits are booked.",
+      "type": "string"
     },
     "balance": {
       "description": "Outstanding amount including accrued interest. Monetary integer number of cents/pence.",
@@ -135,14 +139,25 @@
       "enum": ["i", "iia", "iib", "ineligible", "exclude"]
     },
     "impairment_amount": {
-      "description": "The impairment amount for a security is the allowance set aside by the firm.",
+      "description": "The impairment amount for a security is the allowance set aside by the firm for losses.",
       "type": "integer",
       "minimum": 0
     },
     "impairment_status": {
-      "description": "The recognition stage for the impairment.",
+      "description": "The recognition stage for the impairment/expected credit loss of the product.",
       "type": "string",
-      "enum": ["stage_1", "stage_2", "stage_3"]
+      "enum": [
+        "performing",
+        "stage_1",
+        "normal",
+	"watch",
+        "stage_2",
+        "substandard",
+        "non_performing",
+        "stage_3",
+        "doubtful",
+        "loss"
+      ]
     },
     "insolvency_rank": {
       "description": "The insolvency ranking as per the national legal fraamework of the reporting institution.",
@@ -163,6 +178,13 @@
       "description": "The final payment date for interest payments, often coincides with end_date.",
       "type": "string",
       "format": "date-time"
+    },
+    "ledger_code": {
+      "description": "The internal ledger code or line item name.",
+      "type": "string"
+    },
+    "mic_code": {
+        "$ref": "https://raw.githubusercontent.com/SuadeLabs/fire/master/v1-dev/common.json#/mic_code"
     },
     "mna_id": {
       "description": "The unique identifier of the Master Netting Agreement this security falls under. Typically where used as derivatives collateral.",
@@ -206,7 +228,7 @@
     "purpose": {
       "description": "The purpose for which the security is being held.",
       "type": "string",
-      "enum": ["investment", "collateral", "reference", "derivative_collateral", "other"]
+      "enum": ["trade_finance", "aircraft_finance", "investment", "collateral", "reference", "derivative_collateral", "other", "share_capital", "non_controlling"]
     },
     "rate": {
       "description": "The full interest rate applied to the security notional in percentage terms. Note that this therefore includes the base_rate (ie. not the spread).",
@@ -244,6 +266,36 @@
       "enum": ["repo", "rev_repo", "sell_buy_back", "buy_sell_back", "bond_loan", "bond_borrow",
                "stock_loan", "stock_borrow", "margin_loan"]
     },
+    "fitch_lt": {
+        "description": "Fitch long term credit ratings",
+        "type":"string",
+        "enum": ["aaa", "aa_plus", "aa", "aa_minus", "a_plus", "a", "a_minus", "bbb_plus", "bbb", "bbb_minus", "bb_plus", "bb", "bb_minus", "b_plus", "b", "b_minus", "ccc_plus", "ccc", "ccc_minus", "cc", "c", "d"]
+    },
+    "fitch_st": {
+        "description": "Fitch short term credit ratings",
+        "type":"string",
+        "enum": ["f1_plus", "f1", "f2", "f3", "b", "c", "d"]
+    },
+    "moodys_lt": {
+        "description": "Moody's long term credit ratings",
+        "type":"string",
+        "enum": ["aaa", "aa1", "aa2", "aa3", "a1", "a2", "a3", "baa1", "baa2", "baa3", "ba1", "ba2", "ba3", "b1", "b2", "b3", "caa1", "caa2", "caa3", "ca", "c"]
+    },
+    "moodys_st": {
+        "description": "Moodys short term credit ratings",
+        "type":"string",
+        "enum": ["p1", "p2", "p3", "np"]
+    },
+    "snp_lt": {
+        "description": "S&P long term credit ratings",
+        "type":"string",
+        "enum": ["aaa", "aa_plus", "aa", "aa_minus", "a_plus", "a", "a_minus", "bbb_plus", "bbb", "bbb_minus", "bb_plus", "bb", "bb_minus", "b_plus", "b", "b_minus", "ccc_plus", "ccc", "ccc_minus", "cc", "c", "d"]
+    },
+    "snp_st": {
+        "description": "S&P short term credit ratings",
+        "type":"string",
+        "enum": ["a1", "a2", "a3", "b", "c", "d"]
+    },
     "source": {
       "description": "The source(s) where this data originated. If more than one source needs to be stored for data lineage, it should be separated by a dash. eg. Source1-Source2",
       "type": "string"
@@ -253,16 +305,23 @@
       "type": "string",
       "format": "date-time"
     },
+    "status": {
+      "description": "Describes if capital has been paid up or has been called up but not paid for.",
+      "type": "string",
+      "enum": ["paid_up", "called_up"]
+    },
     "type": {
       "description": "This is the type of the security with regards to common regulatory classifications.",
       "type": "string",
       "enum": [
-	"cash", "cb_reserve", "cb_facility", "cash_ratio_deposit",
-        "equity", "share", "share_agg", "pref_share",
+        "cash", "cb_reserve", "cb_facility", "cash_ratio_deposit",
+        "equity", "share", "share_agg", "pref_share","treasury",
         "debt", "bond", "covered_bond", "convertible_bond",
         "abs", "rmbs", "rmbs_trans", "cmbs", "frn", "mbs", "abs_auto", "abs_consumer", "abs_sme", "abs_other",
         "emtn", "mtn", "commercial_paper", "cd", "struct_note", "spv_mortgages", "spv_other",
-	"other"
+        "guarantee", "financial_guarantee", "financial_sloc", "performance_guarantee", "warranty",
+        "performance_bond", "performance_sloc", "letter_of_credit", "bill_of_exchange", "acceptance", "urp",
+        "other"
       ]
     },
     "trade_date": {
@@ -282,6 +341,11 @@
     "version_id": {
       "description": "The version identifier of the data such as the firm's internal batch identifier.",
       "type": "string"
+    },
+    "next_repricing_date": {
+      "description": "The date on which the interest rate of the security will be re-calculated. YYYY-MM-DDTHH:MM:SSZ in accordance with ISO 8601.",
+      "type": "string",
+      "format": "date-time"
     }
   },
   "required": ["id", "date"],

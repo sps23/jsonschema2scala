@@ -13,10 +13,10 @@
       "type": "string",
       "format": "date-time"
     },
-	"address_city": {
-	  "description": "City, town or village.",
-	  "type": "string"
-	},
+    "address_city": {
+      "description": "City, town or village.",
+      "type": "string"
+    },
     "boe_industry_code": {
       "description": "Bank of England industry code.",
       "type": "string"
@@ -24,6 +24,11 @@
     "boe_sector_code": {
       "description": "Bank of England sector code.",
       "type": "string"
+    },
+    "count": {
+      "description": "Describes the number of entities represented by this record. eg. joint customers should have a count > 1.",
+      "type": "integer",
+      "minimum": 1
     },
     "country_code": {
       "$ref": "https://raw.githubusercontent.com/SuadeLabs/fire/master/v1-dev/common.json#/country_code",
@@ -45,6 +50,16 @@
       "minimum": 1,
       "maximum": 12
     },
+    "fitch_lt": {
+        "description": "Fitch long term credit ratings",
+        "type":"string",
+        "enum": ["aaa", "aa_plus", "aa", "aa_minus", "a_plus", "a", "a_minus", "bbb_plus", "bbb", "bbb_minus", "bb_plus", "bb", "bb_minus", "b_plus", "b", "b_minus", "ccc_plus", "ccc", "ccc_minus", "cc", "c", "d"]
+    },
+    "fitch_st": {
+        "description": "Fitch short term credit ratings",
+        "type":"string",
+        "enum": ["f1_plus", "f1", "f2", "f3", "b", "c", "d"]
+    },
     "intra_group": {
       "description": "Flag to indicate that this should be considered an intra-group entity.",
       "type": "boolean"
@@ -59,12 +74,36 @@
       "description": "The official legal name of the entity.",
       "type": "string"
     },
+    "moodys_lt": {
+        "description": "Moody's long term credit ratings",
+        "type":"string",
+        "enum": ["aaa", "aa1", "aa2", "aa3", "a1", "a2", "a3", "baa1", "baa2", "baa3", "ba1", "ba2", "ba3", "b1", "b2", "b3", "caa1", "caa2", "caa3", "ca", "c"]
+    },
+    "moodys_st": {
+        "description": "Moodys short term credit ratings",
+        "type":"string",
+        "enum": ["p1", "p2", "p3", "np"]
+    },
     "name": {
       "description": "The name of the person or legal entity to be used for display and reference purposes.",
       "type": "string"
     },
     "parent_id": {
       "description": "The unique identifier for the ultimate parent of the person or legal entity.",
+      "type": "string"
+    },
+    "relationship":{
+      "description": "Relationship to parent.",
+      "type": "string",
+      "enum": ["jv", "branch", "subsidiary", "parent"]
+    },
+    "reporting_relationship":{
+      "description": "Relationship to reporting entity. See: relationship.",
+      "type": "string",
+      "enum": ["jv", "branch", "subsidiary", "parent"]
+    },
+    "risk_group_id":{
+      "description": "The unique identifier for the group representing a single risk entity where no relationship of control exists",
       "type": "string"
     },
     "risk_country_code": {
@@ -77,6 +116,22 @@
       "minimum": 0,
       "maximum": 99999
     },
+    "ssic_code": {
+      "description": "The Singaporean standard industry and sector classification.",
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 99999
+    },
+    "snp_lt": {
+        "description": "S&P long term credit ratings",
+        "type":"string",
+        "enum": ["aaa", "aa_plus", "aa", "aa_minus", "a_plus", "a", "a_minus", "bbb_plus", "bbb", "bbb_minus", "bb_plus", "bb", "bb_minus", "b_plus", "b", "b_minus", "ccc_plus", "ccc", "ccc_minus", "cc", "c", "d"]
+    },
+    "snp_st": {
+        "description": "S&P short term credit ratings",
+        "type":"string",
+        "enum": ["a1", "a2", "a3", "b", "c", "d"]
+    },
     "source": {
       "description": "The source(s) where this data originated. If more than one source needs to be stored for data lineage, it should be separated by a dash. eg. Source1-Source2",
       "type": "string"
@@ -85,10 +140,42 @@
       "description": "The designated financial or legal entity category this person or legal entity falls under",
       "type": "string",
       "enum": [
-        "individual", "sme", "supported_sme", "charity", "corporate", "other", "financial", "natural_person", "intl_org",
-        "sovereign", "central_bank", "local_authority", "regional_govt", "central_govt", "other_pse", "pse", "mdb", "credit_institution",
-        "investment_firm", "sspe", "ciu", "ceis", "insurer", "financial_holding", "other_financial", "promotional_lender",
-        "pic", "credit_union", "deposit_broker", "pension_fund", "partnership", "ccp"
+        "individual",
+        "natural_person",
+        "partnership",
+        "corporate",
+        "sme",
+        "supported_sme",
+        "credit_union",
+        "charity",
+        "community_charity",
+        "financial",
+        "credit_institution",
+        "promotional_lender",
+        "state_owned_bank",
+        "investment_firm",
+        "mmkt_fund",
+        "pension_fund",
+        "deposit_broker",
+        "insurer",
+        "financial_holding",
+        "other_financial",
+        "pse",
+        "central_govt",
+        "regional_govt",
+        "local_authority",
+        "statutory_board",
+        "other_pse",
+        "sovereign",
+        "intl_org",
+        "central_bank",
+        "mdb",
+        "sspe",
+        "ciu",
+        "pic",
+        "ccp",
+        "qccp",
+        "other"
       ]
     },
     "version_id": {

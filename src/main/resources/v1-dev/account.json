@@ -29,9 +29,7 @@
       "type": "integer"
     },
     "asset_liability": {
-      "description": "Is the account an asset or a liability on the firm's balance sheet?",
-      "type": "string",
-      "enum": ["asset", "liability"]
+      "$ref": "https://raw.githubusercontent.com/SuadeLabs/fire/master/v1-dev/common.json#/asset_liability"
     },
     "balance": {
       "description": "The contractual balance on the date and in the currency given. Monetary type represented as a naturally positive integer number of cents/pence.",
@@ -67,6 +65,10 @@
     "country_code": {
       "description": "Two-letter country code for account location/jurisdiction. In accordance with ISO 3166-1.",
       "$ref": "https://raw.githubusercontent.com/SuadeLabs/fire/master/v1-dev/common.json#/country_code"
+    },
+    "cost_center_code": {
+      "description": "The organizational unit or sub-unit to which costs/profits are booked.",
+      "type": "string"
     },
     "currency_code": {
       "description": "Actual currency of the Account in accordance with ISO 4217 standards. It should be consistent with balance, accrued_interest, guarantee_amount and other monetary amounts.",
@@ -114,7 +116,28 @@
         "be_pf", "bg_dif", "hr_di", "cy_dps", "cz_dif", "dk_gdfi", "ee_dgs", "fi_dgf", "fr_fdg",  "gb_fscs",
         "de_edb", "de_edo", "de_edw", "gr_dgs", "hu_ndif", "ie_dgs", "it_fitd", "lv_dgf", "lt_vi",
         "lu_fgdl", "mt_dcs", "nl_dgs", "pl_bfg", "pt_fgd", "ro_fgdb", "sk_dpf", "si_dgs", "es_fgd",
-        "se_ndo"
+        "se_ndo", "us_fdic"
+      ]
+    },
+    "impairment_amount": {
+      "description": "The impairment amount is the allowance set aside by the firm that accounts for the event that the asset becomes impaired in the future.",
+      "type": "integer",
+      "minimum": 0
+    },
+    "impairment_status": {
+      "description": "The recognition stage for the impairment/expected credit loss of the product.",
+      "type": "string",
+      "enum": [
+        "performing",
+        "stage_1",
+        "normal",
+	"watch",
+        "stage_2",
+        "substandard",
+        "non_performing",
+        "stage_3",
+        "doubtful",
+        "loss"
       ]
     },
     "insolvency_rank": {
@@ -161,7 +184,7 @@
     "purpose": {
       "description": "The purpose for which the account was created or is being used.",
       "type": "string",
-      "enum": ["deposit", "cash_management", "ci_service", "collateral", "clearing", "custody", "ips", "operational", "prime_brokerage", "firm_operating_expenses", "employee", "system", "critical_service", "tax", "other"]
+      "enum": ["deposit", "cash_management", "ci_service", "collateral", "clearing", "custody", "ips", "operational", "operational_escrow", "escrow", "prime_brokerage", "firm_operating_expenses", "employee", "system", "critical_service", "tax", "other"]
     },
     "rate": {
       "description": "The full interest rate applied to the account balance in percentage terms. Note that this therefore includes the base_rate (ie. not the spread).",
@@ -207,8 +230,8 @@
       "description": "This is the type of the account with regards to common regulatory classifications.",
       "type": "string",
       "enum": [
-        "call", "cd", "current", "credit_card", "internet_only", "isa", "money_market",
-        "bonds", "retail_bonds", "savings", "payments", "time_deposit", "vostro", "provision", "other"
+        "call", "cd", "current", "deferred", "intangible", "goodwill", "credit_card", "internet_only", "isa", "money_market", "ira",
+        "bonds", "retail_bonds", "savings", "payments", "time_deposit", "vostro", "provision", "suspense", "tangible", "ppe", "investment_property", "owner_property", "property", "reserve", "revenue_reserve", "share_plan", "reg_loss", "cf_hedge", "other"
       ]
     },
     "trade_date": {
@@ -237,6 +260,11 @@
     "minimum_balance_eur": {
       "description": "Indicates the minimum balance, in Euros, of each account within the aggregate. Monetary type represented as a naturally positive integer number of cents/pence.",
       "type": "integer"
+    },
+    "next_repricing_date": {
+      "description": "The date on which the interest rate of the account will be re-calculated. YYYY-MM-DDTHH:MM:SSZ in accordance with ISO 8601.",
+      "type": "string",
+      "format": "date-time"
     }
   },
   "required": ["id", "date"],
