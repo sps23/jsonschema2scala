@@ -6,7 +6,7 @@ import scala.collection.immutable.IndexedSeq
 
 sealed abstract class JsonSchemaScalaType(override val entryName: String) extends EnumEntry
 
-object AccountingTreatment extends Enum[JsonSchemaScalaType] {
+object JsonSchemaScalaType extends Enum[JsonSchemaScalaType] {
 
   val values: IndexedSeq[JsonSchemaScalaType] = findValues
 

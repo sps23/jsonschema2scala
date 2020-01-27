@@ -1,6 +1,6 @@
 package jsonschema2scala.parser.model
 
-import jsonschema2scala.parser.model.AccountingTreatment.CaseClass
+import jsonschema2scala.parser.model.JsonSchemaScalaType.CaseClass
 import org.json4s.{JObject, JValue, _}
 
 case class JsonSchema(schema: Option[String],
@@ -20,13 +20,10 @@ object JsonSchema {
   def propertiesFrom(jValue: JValue): Option[List[JsonSchemaProperty]] = {
     jValue match {
       case JObject(propList: List[(String, JValue)]) =>
-        //      propList.foreach(tuple => println(s"${tuple._1}:\n\t${tuple._2}"))
         val parsedProperties: List[JsonSchemaProperty] = propList.flatMap(tuple => {
           val (name, toParse) = tuple
           JsonSchemaProperty.from(name, toParse)
         })
-        //      println("\n\nParsed Properties:")
-        //      parsedProperties.foreach(println)
         Option(parsedProperties)
       case _ =>
         None

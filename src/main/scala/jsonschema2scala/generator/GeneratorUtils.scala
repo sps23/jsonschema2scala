@@ -4,9 +4,10 @@ import scala.annotation.tailrec
 
 trait GeneratorUtils {
 
-  private def wrapScalaKeyword(s: String): String = {
+  private def wrapScalaReservedNames(s: String): String = {
     val scalaKeywords = Seq("type")
-    if (scalaKeywords.contains(s)) s"`$s`" else s
+    val wrap: Boolean = scalaKeywords.contains(s) || s.headOption.exists(_.isDigit)
+    if (wrap) s"`$s`" else s
   }
 
   private[generator] def toName(name: String, startWithCapital: Boolean): String = {
@@ -24,10 +25,10 @@ trait GeneratorUtils {
       case other  => other
     } else name.toList
 
-    iter(init, StringBuilder.newBuilder)
+    wrapScalaReservedNames(iter(init, StringBuilder.newBuilder))
   }
 
-  def toAttributeName(name: String): String = wrapScalaKeyword(name)
+  def toAttributeName(name: String): String = wrapScalaReservedNames(name)
 
   def toClassNameFromTitle(title: String): String = {
     val titleFormatted = title.replace(" Schema", "").replace(' ', '_')

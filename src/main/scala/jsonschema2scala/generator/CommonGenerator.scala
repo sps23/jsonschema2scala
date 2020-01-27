@@ -1,6 +1,6 @@
 package jsonschema2scala.generator
 
-import jsonschema2scala.parser.model.AccountingTreatment.{CaseClass, Trait}
+import jsonschema2scala.parser.model.JsonSchemaScalaType.{CaseClass, Trait}
 import jsonschema2scala.parser.model.{JsonSchema, JsonSchemaProperty}
 
 import scala.collection.mutable

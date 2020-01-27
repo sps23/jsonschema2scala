@@ -1,6 +1,6 @@
 package jsonschema2scala.generator
 
-import jsonschema2scala.parser.model.AccountingTreatment.Trait
+import jsonschema2scala.parser.model.JsonSchemaScalaType.Trait
 import jsonschema2scala.parser.model.{JsonSchema, JsonSchemaProperty}
 
 object CodeGenerator extends GeneratorUtils {
