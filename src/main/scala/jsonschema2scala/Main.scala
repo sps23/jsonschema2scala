@@ -13,7 +13,7 @@ object Main extends App {
     parse(Source.fromResource("v1-dev/common.json").getLines().mkString).asInstanceOf[JObject])
 
   val resources = List(
-    "v1-dev/curve.json", // TODO not generating properly
+//    "v1-dev/curve.json", // TODO not generating properly
     "v1-dev/entity.json",
     "v1-dev/customer.json",
     "v1-dev/issuer.json",

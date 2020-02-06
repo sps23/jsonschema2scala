@@ -6,7 +6,7 @@ import org.json4s.jackson.JsonMethods._
 
 import scala.io.Source
 
-object JsonSchemaParser extends App {
+object JsonSchemaParser {
 
   val securityInput: String        = Source.fromResource("v1-dev/security.json").getLines().mkString
   val securityInputParsed: JObject = parse(securityInput).asInstanceOf[JObject]
