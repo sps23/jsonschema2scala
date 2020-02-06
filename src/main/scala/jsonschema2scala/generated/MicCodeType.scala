@@ -1,3 +1,6 @@
 package jsonschema2scala.generated
 
-object MicCodeType {}
+object MicCodeType {
+
+  type MicCode = String
+}

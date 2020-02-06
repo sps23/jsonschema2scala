@@ -11,8 +11,10 @@ object SecurityPurpose extends Enum[SecurityPurpose] {
   val values: IndexedSeq[SecurityPurpose] = findValues
 
   case object AircraftFinance      extends SecurityPurpose("aircraft_finance")
+  case object BackToBack           extends SecurityPurpose("back_to_back")
   case object Collateral           extends SecurityPurpose("collateral")
   case object DerivativeCollateral extends SecurityPurpose("derivative_collateral")
+  case object Insurance            extends SecurityPurpose("insurance")
   case object Investment           extends SecurityPurpose("investment")
   case object NonControlling       extends SecurityPurpose("non_controlling")
   case object Other                extends SecurityPurpose("other")

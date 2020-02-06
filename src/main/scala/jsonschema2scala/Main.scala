@@ -12,7 +12,7 @@ object Main extends App {
   val commonJsonProperties: Option[List[JsonSchemaProperty]] = JsonSchema.propertiesFrom(
     parse(Source.fromResource("v1-dev/common.json").getLines().mkString).asInstanceOf[JObject])
 
-  val resources = List(
+  val resources: List[String] = List(
 //    "v1-dev/curve.json", // TODO not generating properly
     "v1-dev/entity.json",
     "v1-dev/customer.json",
@@ -25,7 +25,7 @@ object Main extends App {
     "v1-dev/derivative_cash_flow.json",
     "v1-dev/loan.json"
   )
-  val jsonSchemas =
+  val jsonSchemas: List[JsonSchema] =
     resources.flatMap(r => JsonSchema.from(parse(Source.fromResource(r).getLines().mkString).asInstanceOf[JObject]))
 
   val generated = CodeGenerator.generateAll(

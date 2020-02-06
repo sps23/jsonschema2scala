@@ -13,4 +13,5 @@ object AssetLiability extends Enum[AssetLiability] {
   case object Asset     extends AssetLiability("asset")
   case object Liability extends AssetLiability("liability")
   case object Equity    extends AssetLiability("equity")
+  case object Pnl       extends AssetLiability("pnl")
 }
