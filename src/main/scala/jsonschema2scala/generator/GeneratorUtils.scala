@@ -37,7 +37,7 @@ trait GeneratorUtils {
 
   def toClassName(name: String): String = toName(name, startWithCapital = true) match {
     case "Number"  => "BigDecimal"
-    case "Integer" => "Int"
+    case "Integer" => "Long"
     case other     => other
   }
 
