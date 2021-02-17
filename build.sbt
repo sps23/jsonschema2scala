@@ -1,14 +1,14 @@
 name := "jsonschema2scala"
 
-version := "0.1"
+version := "1.0"
 
-scalaVersion := "2.12.10"
+scalaVersion := "2.13.4"
 
 libraryDependencies ++= Seq(
-  "com.beachape" %% "enumeratum" % "1.5.13",
-  "org.json4s" %% "json4s-jackson" % "3.6.7",
-  "org.scalactic" %% "scalactic" % "3.0.1",
-  "org.scalatest" %% "scalatest" % "3.0.1" % "test"
+  "com.beachape"  %% "enumeratum"     % "1.6.1",
+  "org.json4s"    %% "json4s-jackson" % "3.6.10",
+  "org.scalactic" %% "scalactic"      % "3.2.3",
+  "org.scalatest" %% "scalatest"      % "3.2.3" % "test"
 )
 
 mainClass in (Compile, run) := Some("jsonschema2scala.Main")

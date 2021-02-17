@@ -1,8 +1,9 @@
 package jsonschema2scala.generator
 
-import org.scalatest.{FlatSpec, Matchers}
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
 
-class ScalaGeneratorTest extends FlatSpec with Matchers {
+class ScalaGeneratorTest extends AnyFlatSpec with Matchers {
 
   val scalaGenerator: ScalaGenerator = new ScalaGenerator {
     override def template: String = ""
