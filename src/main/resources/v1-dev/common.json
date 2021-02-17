@@ -19,13 +19,19 @@
     "description": "The asset class to which the derivative belongs.",
     "type": "string",
     "enum": [
-      "cr", "cr_index", "cr_single",
-      "eq", "eq_index", "eq_single",
+      "co",
+        "energy", "coal", "electricity", "gas", "oil",
+        "metals",
+        "precious_metals", "gold", "palladium", "platinum", "silver",
+        "agri", "coffee", "corn", "sugar",
+        "co_other",
+      "cr",
+        "cr_index", "cr_single",
+      "eq",
+        "eq_index", "eq_single",
       "fx",
       "ir",
-      "co", "energy", "oil", "gas", "coal", "electricity",
-        "metals", "precious_metals", "silver", "gold", "platinum", "palladium",
-        "agri", "sugar", "coffee", "corn",
+        "inflation",
       "other"
     ]
    },
@@ -86,6 +92,37 @@
       "XW", "XX", "XY", "XZ", "ZZ"
     ]
   },
+  "impairment_status": {
+    "description": "The recognition stage for the impairment/expected credit loss of the product.",
+    "type": "string",
+    "enum": [
+      "performing",
+      "stage_1",
+      "normal",
+      "watch",
+      "stage_2",
+      "substandard",
+      "non_performing",
+      "stage_3",
+      "doubtful",
+      "loss",
+      "stage_1_normal",
+      "stage_1_watch",
+      "stage_1_substandard",
+      "stage_1_doubtful",
+      "stage_1_loss",
+      "stage_2_normal",
+      "stage_2_watch",
+      "stage_2_substandard",
+      "stage_2_doubtful",
+      "stage_2_loss",
+      "stage_3_normal",
+      "stage_3_watch",
+      "stage_3_substandard",
+      "stage_3_doubtful",
+      "stage_3_loss"
+    ]
+  },
   "regulatory_book": {
     "description": "The type of portfolio in which the instrument is held.",
     "type": "string",
@@ -101,5 +138,10 @@
   "type": "string",
   "minLength": 4,
   "maxLength": 4
+ },
+ "ccf": {
+  "description": "The credit conversion factor that indicates the proportion of the undrawn amount that would be drawn down on default.",
+  "type": "number",
+  "minimum": 0
  }
 }

@@ -9,11 +9,16 @@ import scala.io.Source
 
 object Main extends App {
 
+  //TODO
+  // - add packae to the generated resources
+  // - store generated resources automatically in the source code in proper package
+  // - remove extra lines on top of the generated class (before import)
+  // - auto reformat code
+
   val commonJsonProperties: Option[List[JsonSchemaProperty]] = JsonSchema.propertiesFrom(
     parse(Source.fromResource("v1-dev/common.json").getLines().mkString).asInstanceOf[JObject])
 
   val resources: List[String] = List(
-//    "v1-dev/curve.json", // TODO not generating properly
     "v1-dev/entity.json",
     "v1-dev/customer.json",
     "v1-dev/issuer.json",
@@ -23,7 +28,13 @@ object Main extends App {
     "v1-dev/collateral.json",
     "v1-dev/derivative.json",
     "v1-dev/derivative_cash_flow.json",
-    "v1-dev/loan.json"
+    "v1-dev/loan.json", // new below
+    "v1-dev/adjustment.json",
+    "v1-dev/reporter.json",
+    "v1-dev/batch.json", // TODO problem with 'data' attribute
+    "v1-dev/exchange_rate.json",
+    "v1-dev/loan_transaction.json",
+    "v1-dev/curve.json"
   )
   val jsonSchemas: List[JsonSchema] =
     resources.flatMap(r => JsonSchema.from(parse(Source.fromResource(r).getLines().mkString).asInstanceOf[JObject]))

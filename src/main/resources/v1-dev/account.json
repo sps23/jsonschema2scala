@@ -15,25 +15,29 @@
     },
     "acc_fv_change_before_taxes": {
       "description": "Accumulated change in fair value before taxes.",
-      "type": "integer"
+      "type": "integer",
+      "monetary": true
     },
     "accounting_treatment":{
        "$ref": "https://raw.githubusercontent.com/SuadeLabs/fire/master/v1-dev/common.json#/accounting_treatment"
     },
     "accrued_interest": {
       "description": "The accrued interest since the last payment date and due at the next payment date. Monetary type represented as a naturally positive integer number of cents/pence.",
-      "type": "integer"
+      "type": "integer",
+      "monetary": true
     },
     "arrears_balance": {
       "description": "The balance of the capital amount that is considered to be in arrears (for overdrafts/credit cards). Monetary type represented as a naturally positive integer number of cents/pence.",
-      "type": "integer"
+      "type": "integer",
+      "monetary": true
     },
     "asset_liability": {
       "$ref": "https://raw.githubusercontent.com/SuadeLabs/fire/master/v1-dev/common.json#/asset_liability"
     },
     "balance": {
       "description": "The contractual balance on the date and in the currency given. Monetary type represented as a naturally positive integer number of cents/pence.",
-      "type": "integer"
+      "type": "integer",
+      "monetary": true
     },
     "base_rate": {
       "description": "The base rate represents the basis of the rate on the balance at the given date as agreed in the terms of the account.",
@@ -78,6 +82,9 @@
       "description": "The unique identifier used by the financial institution to identify the customer that owns the account.",
       "type": "string"
     },
+    "ccf": {
+      "$ref": "https://raw.githubusercontent.com/SuadeLabs/fire/master/v1-dev/common.json#/ccf"
+    },
     "end_date": {
       "description": "The end or maturity date of the account. Format should be YYYY-MM-DDTHH:MM:SSZ in accordance with ISO 8601",
       "type": "string",
@@ -86,7 +93,8 @@
     "encumbrance_amount": {
       "description": "The amount of the account that is encumbered by potential future commitments or legal liabilities. Monetary type represented as a naturally positive integer number of cents/pence.",
       "type": "integer",
-      "minimum": 0
+      "minimum": 0,
+      "monetary": true
     },
     "encumbrance_type": {
       "description": "The type of the encumbrance causing the encumbrance_amount.",
@@ -107,7 +115,8 @@
     "guarantee_amount": {
       "description": "The amount of the account that is guaranteed under a Government Deposit Guarantee Scheme. Monetary type represented as a naturally positive integer number of cents/pence.",
       "type": "integer",
-      "minimum": 0
+      "minimum": 0,
+      "monetary": true
     },
     "guarantee_scheme": {
       "description": "The Government Deposit Scheme scheme under which the guarantee_amount is guaranteed.",
@@ -122,26 +131,14 @@
     "impairment_amount": {
       "description": "The impairment amount is the allowance set aside by the firm that accounts for the event that the asset becomes impaired in the future.",
       "type": "integer",
-      "minimum": 0
+      "minimum": 0,
+      "monetary": true
     },
     "impairment_status": {
-      "description": "The recognition stage for the impairment/expected credit loss of the product.",
-      "type": "string",
-      "enum": [
-        "performing",
-        "stage_1",
-        "normal",
-	"watch",
-        "stage_2",
-        "substandard",
-        "non_performing",
-        "stage_3",
-        "doubtful",
-        "loss"
-      ]
+      "$ref": "https://raw.githubusercontent.com/SuadeLabs/fire/master/v1-dev/common.json#/impairment_status"
     },
     "insolvency_rank": {
-      "description": "The insolvency ranking as per the national legal fraamework of the reporting institution.",
+      "description": "The insolvency ranking as per the national legal framework of the reporting institution.",
       "type": "integer",
       "minimum": 1
     },
@@ -156,7 +153,8 @@
     },
     "limit_amount": {
       "description": "The minimum balance the customer can go overdrawn in their account.",
-      "type": "integer"
+      "type": "integer",
+      "monetary": true
     },
     "next_payment_date": {
       "description": "The next date at which interest will be paid or accrued_interest balance returned to zero.",
@@ -185,45 +183,101 @@
       "description": "The purpose for which the account was created or is being used.",
       "type": "string",
       "enum": [
-        "deposit",
-        "admin_expenses",
-        "ci_service",
-        "collateral",
-        "clearing",
+        "admin",
+        "annual_bonus_accruals",
+        "benefit_in_kind",
+        "capital_gain_tax",
         "cash_management",
-        "ips",
+        "cf_hedge",
+        "ci_service",
+        "clearing",
+        "collateral",
+        "commitments",
+        "computer_and_it_cost",
+        "corporation_tax",
+        "credit_card_fee",
+        "critical_service",
+        "current_account_fee",
         "custody",
-	"operational",
-        "prime_brokerage",
-	"ppe",
-        "property",
+        "employee_stock_option",
+        "dealing_revenue",
+        "dealing_rev_deriv",
+        "dealing_rev_deriv_nse",
+        "dealing_rev_fx",
+        "dealing_rev_fx_nse",
+        "dealing_rev_sec",
+        "dealing_rev_sec_nse",
+        "deposit",
+        "derivative_fee",
+        "dividend",
+        "div_from_cis",
+        "div_from_money_mkt",
+        "donation",
+        "employee",
+        "escrow",
+        "fees",
+        "fine",
+        "firm_operating_expenses",
+        "firm_operations",
+        "fx",
+        "goodwill",
+        "insurance_fee",
+        "intra_group_fee",
+        "investment_banking_fee",
+        "inv_in_subsidiary",
         "investment_property",
+        "interest",
+        "int_on_bond_and_frn",
+        "int_on_bridging_loan",
+        "int_on_credit_card",
+        "int_on_ecgd_lending",
+        "int_on_deposit",
+        "int_on_derivative",
+        "int_on_deriv_hedge",
+        "int_on_loan_and_adv",
+        "int_on_money_mkt",
+        "int_on_mortgage",
+        "int_on_sft",
+        "ips",
+        "loan_and_advance_fee",
+        "ni_contribution",
+        "manufactured_dividend",
+        "mortgage_fee",
+        "non_life_ins_premium",
+        "occupancy_cost",
+        "operational",
+        "operational_excess",
+        "operational_escrow",
+        "other",
+        "other_expenditure",
+        "other_fs_fee",
+        "other_non_fs_fee",
+        "other_social_contrib",
+        "other_staff_rem",
+        "other_staff_cost",
+        "overdraft_fee",
         "own_property",
+        "pension",
+        "ppe",
+        "prime_brokerage",
+        "property",
+        "recovery",
+        "redundancy_pymt",
+        "reference",
+        "reg_loss",
+        "regular_wages",
+        "release",
+        "rent",
+        "restructuring",
+        "retained_earnings",
+        "revaluation",
         "revenue_reserve",
         "share_plan",
-        "reg_loss",
-        "cf_hedge",
-        "fees",
-	"firm_operating_expenses",
-	"goodwill",
-        "pension",
-        "restructuring",
-        "commitments",
-        "tax",
-        "dividend",
-        "critical_service",
-        "interest",
-        "fx",
-        "admin",
         "staff",
-        "depreciation",
         "system",
-        "operational_escrow",
-        "escrow",
-        "firm_operations",
-        "employee",
-        "other",
-        "reference"
+        "tax",
+        "unsecured_loan_fee",
+        "write_off"
       ]
     },
     "rate": {
@@ -238,14 +292,12 @@
     "regulatory_book": {
       "$ref": "https://raw.githubusercontent.com/SuadeLabs/fire/master/v1-dev/common.json#/regulatory_book"
     },
-    "reporting_lei": {
-      "description": "The LEI code for the legal entity under which the account is being reported.",
-      "type": "string",
-      "minLength": 20,
-      "maxLength": 20
-    },
     "reporting_entity_name": {
-      "description": "The name of the reporting legal entity for MI purposes (as LEI code may not be available).",
+      "description": "The name of the reporting legal entity for display purposes.",
+      "type": "string"
+    },
+    "reporting_id": {
+      "description": "The internal ID for the legal entity under which the account is being reported.",
       "type": "string"
     },
     "risk_country_code": {
@@ -275,6 +327,7 @@
         "cd",
         "credit_card",
         "current",
+        "depreciation",
         "internet_only",
         "ira",
         "isa",
@@ -284,6 +337,7 @@
         "expense",
         "income",
         "intangible",
+        "prepaid_card",
         "provision",
         "reserve",
         "suspense",
@@ -293,7 +347,8 @@
         "savings",
         "time_deposit",
         "vostro",
-        "other"
+        "other",
+        "amortisation"
       ]
     },
     "trade_date": {
@@ -302,7 +357,7 @@
       "format": "date-time"
     },
     "uk_funding_type": {
-      "description": "Funding type calculated according to BIPRU 12.5",
+      "description": "Funding type calculated according to BIPRU 12.5/12.6",
       "type": "string",
       "enum": ["a", "b"]
     },
@@ -312,7 +367,8 @@
     },
     "withdrawal_penalty": {
       "description": "This is the penalty incurred by the customer for an early withdrawal on this account. An early withdrawal is defined as a withdrawal prior to the next_withdrawal_date. Monetary type represented as a naturally positive integer number of cents/pence.",
-      "type": "integer"
+      "type": "integer",
+      "monetary": true
     },
     "count": {
       "description": "Describes the number of accounts aggregated into a single row.",
@@ -321,12 +377,17 @@
     },
     "minimum_balance_eur": {
       "description": "Indicates the minimum balance, in Euros, of each account within the aggregate. Monetary type represented as a naturally positive integer number of cents/pence.",
-      "type": "integer"
+      "type": "integer",
+      "monetary": true
     },
     "next_repricing_date": {
       "description": "The date on which the interest rate of the account will be re-calculated. YYYY-MM-DDTHH:MM:SSZ in accordance with ISO 8601.",
       "type": "string",
       "format": "date-time"
+    },
+    "risk_weight_std": {
+      "description": "The standardised approach risk weight represented as a decimal/float such that 1.5% is 0.015.",
+      "type": "number"
     }
   },
   "required": ["id", "date"],

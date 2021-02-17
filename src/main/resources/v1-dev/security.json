@@ -16,18 +16,21 @@
     },
     "acc_fv_change_before_taxes": {
       "description": "Accumulated change in fair value before taxes.",
-      "type": "integer"
+      "type": "integer",
+      "monetary": true
     },
     "acc_fv_change_credit_risk": {
       "description": "Accumulated changes in fair value due to credit risk.",
-      "type": "integer"
+      "type": "integer",
+      "monetary": true
     },
     "accounting_treatment":{
        "$ref": "https://raw.githubusercontent.com/SuadeLabs/fire/master/v1-dev/common.json#/accounting_treatment"
     },
     "accrued_interest": {
       "description": "The accrued interest since the last payment date and due at the next payment date. Monetary type represented as an integer number of cents/pence.",
-      "type": "integer"
+      "type": "integer",
+      "monetary": true
     },
     "asset_liability": {
         "description": "Is the security (valued at either amortised cost or fair value) an asset or a liability on the firm's balance sheet.",
@@ -36,7 +39,7 @@
     "capital_tier": {
       "description": "The capital tiers based on own funds requirements.",
       "type": "string",
-      "enum": ["tier_1", "ce_tier_1", "add_tier_1", "tier_2", "anc_tier_2", "bas_tier_2", "tier_3", "anc_tier_3", "bas_tier_3"]
+      "enum": ["tier_1", "ce_tier_1", "add_tier_1", "tier_2", "cet1_grandfathered" , "at1_grandfathered" , "t2_grandfathered" ,"anc_tier_2", "bas_tier_2", "tier_3", "anc_tier_3", "bas_tier_3"]
     },
     "cb_haircut": {
       "description": "The haircut as determined by the firm's central bank",
@@ -50,7 +53,8 @@
     },
     "balance": {
       "description": "Outstanding amount including accrued interest. Monetary integer number of cents/pence.",
-      "type": "integer"
+      "type": "integer",
+      "monetary": true
     },
     "base_rate": {
       "description": "The base rate represents the basis of the rate on the balance at the given date as agreed in the terms of the financial product.",
@@ -91,6 +95,10 @@
       "minimum": 1,
       "maximum": 12
     },
+    "csa_id": {
+      "description": "The unique identifier of the credit support annex this security falls under. Typically where used as derivatives collateral.",
+      "type": "string"
+    },
     "currency_code": {
       "description": "Actual currency of the security in accordance with ISO 4217 standards. It should be consistent with balance, accrued_interest, guarantee_amount and other monetary amounts.",
       "$ref": "https://raw.githubusercontent.com/SuadeLabs/fire/master/v1-dev/common.json#/currency_code"
@@ -106,7 +114,8 @@
     "encumbrance_amount": {
       "description": "The amount of the security that is encumbered by potential future commitments or legal liabilities such as within a repo pool. Monetary type represented as a naturally positive integer number of cents/pence.",
       "type": "integer",
-      "minimum": 0
+      "minimum": 0,
+      "monetary": true
     },
     "end_date": {
       "description": "YYYY-MM-DDTHH:MM:SSZ in accordance with ISO 8601",
@@ -136,33 +145,48 @@
     "hqla_class": {
       "description": "What is the HQLA classification of this security?",
       "type": "string",
-      "enum": ["i", "iia", "iib", "ineligible", "exclude"]
+      "enum": ["i", "i_non_op", "iia", "iia_non_op", "iib", "iib_non_op", "ineligible", "exclude"]
     },
     "impairment_amount": {
       "description": "The impairment amount for a security is the allowance set aside by the firm for losses.",
       "type": "integer",
-      "minimum": 0
+      "minimum": 0,
+      "monetary": true
     },
     "impairment_status": {
-      "description": "The recognition stage for the impairment/expected credit loss of the product.",
-      "type": "string",
-      "enum": [
-        "performing",
-        "stage_1",
-        "normal",
-	"watch",
-        "stage_2",
-        "substandard",
-        "non_performing",
-        "stage_3",
-        "doubtful",
-        "loss"
-      ]
+      "$ref": "https://raw.githubusercontent.com/SuadeLabs/fire/master/v1-dev/common.json#/impairment_status"
     },
     "insolvency_rank": {
       "description": "The insolvency ranking as per the national legal fraamework of the reporting institution.",
       "type": "integer",
       "minimum": 1
+    },
+    "index_composition": {
+      "description": "Constituents and their proportion in an index.",
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "properties": {
+          "reference_id": {
+            "description": "The reference security id for the weight.",
+            "type": "string"
+          },
+          "weight": {
+            "description": "The proportion of the reference in the index. It is recorded in decimal format.",
+            "type": "number",
+            "minimum": 0.0,
+            "maximum": 1.0
+          }
+        },
+        "required": ["reference_id", "weight"]
+      }
+    },
+    "interest_repayment_frequency": {
+      "description": "Repayment frequency of the interest.",
+      "type": "string",
+      "enum": ["daily", "weekly", "bi_weekly", "monthly", "bi_monthly", "quarterly", "semi_annually", "annually", "at_maturity"]
     },
     "isin_code": {
       "description": "The unique International Securities Identification Number for the security according to ISO 6166.",
@@ -197,11 +221,13 @@
     },
     "mtm_clean": {
       "description": "The mark-to-market value of the security excluding interest. Monetary number of cents/pence.",
-      "type": "integer"
+      "type": "integer",
+      "monetary": true
     },
     "mtm_dirty": {
       "description": "The mark-to-market value of the security including interest. Monetary number of cents/pence.",
-      "type": "integer"
+      "type": "integer",
+      "monetary": true
     },
     "next_payment_date": {
       "description": "The next date at which interest will be paid or accrued_interest balance returned to zero.",
@@ -210,7 +236,8 @@
     },
     "notional_amount": {
       "description": "The notional value is the total amount of a security's underlying asset at its spot price. Monetary number of cents.",
-      "type": "integer"
+      "type": "integer",
+      "monetary": true
     },
     "on_balance_sheet": {
       "description": "Is the security reported on the balance sheet of the financial institution?",
@@ -229,17 +256,21 @@
       "description": "The purpose for which the security is being held.",
       "type": "string",
       "enum": [
-        "trade_finance", 
         "aircraft_finance",
-        "investment",
-        "insurance",
+        "back_to_back",
         "collateral",
-        "reference",
+        "custody",
         "derivative_collateral",
-        "other",
-        "share_capital",
+        "independent_collateral_amount",
+        "insurance",
+        "investment",
         "non_controlling",
-        "back_to_back"
+        "other",
+        "reference",
+        "segregated_collateral",
+        "share_capital",
+        "trade_finance",
+        "default_fund"
      ]
     },
     "rate": {
@@ -253,14 +284,12 @@
       "description": "Can the security be rehypothecated by the borrower?",
       "type": "boolean"
     },
-    "reporting_lei": {
-      "description": "The LEI code for the legal entity under which the security is being reported.",
-      "type": "string",
-      "minLength": 20,
-      "maxLength": 20
-    },
     "reporting_entity_name": {
-      "description": "The name of the reporting legal entity for display purposes (as LEI code may not be available).",
+      "description": "The name of the reporting legal entity for display purposes.",
+      "type": "string"
+    },
+    "reporting_id": {
+      "description": "The internal ID for the legal entity under which the account is being reported.",
       "type": "string"
     },
     "risk_country_code": {
@@ -281,12 +310,12 @@
     "fitch_lt": {
         "description": "Fitch long term credit ratings",
         "type":"string",
-        "enum": ["aaa", "aa_plus", "aa", "aa_minus", "a_plus", "a", "a_minus", "bbb_plus", "bbb", "bbb_minus", "bb_plus", "bb", "bb_minus", "b_plus", "b", "b_minus", "ccc_plus", "ccc", "ccc_minus", "cc", "c", "d"]
+        "enum": ["aaa", "aa_plus", "aa", "aa_minus", "a_plus", "a", "a_minus", "bbb_plus", "bbb", "bbb_minus", "bb_plus", "bb", "bb_minus", "b_plus", "b", "b_minus", "ccc_plus", "ccc", "ccc_minus", "cc", "c", "rd", "d"]
     },
     "fitch_st": {
         "description": "Fitch short term credit ratings",
         "type":"string",
-        "enum": ["f1_plus", "f1", "f2", "f3", "b", "c", "d"]
+        "enum": ["f1_plus", "f1", "f2", "f3", "b", "c", "rd", "d"]
     },
     "moodys_lt": {
         "description": "Moody's long term credit ratings",
@@ -326,14 +355,50 @@
       "description": "This is the type of the security with regards to common regulatory classifications.",
       "type": "string",
       "enum": [
-        "cash", "cb_reserve", "cb_facility", "cash_ratio_deposit",
-        "equity", "share", "share_agg", "pref_share","treasury",
-        "debt", "bond", "covered_bond", "convertible_bond",
-        "abs", "rmbs", "rmbs_trans", "cmbs", "frn", "mbs", "abs_auto", "abs_consumer", "abs_sme", "abs_other",
-        "emtn", "mtn", "commercial_paper", "cd", "struct_note", "spv_mortgages", "spv_other",
-        "guarantee", "financial_guarantee", "financial_sloc", "performance_guarantee", "warranty",
-        "performance_bond", "performance_sloc", "letter_of_credit", "bill_of_exchange", "acceptance", "urp",
-        "other"
+        "abs",
+        "abs_auto",
+        "abs_consumer",
+        "abs_other",
+        "abs_sme",
+        "acceptance",
+        "bill_of_exchange",
+        "bond",
+        "cash",
+        "cash_ratio_deposit",
+        "cb_facility",
+        "cb_reserve",
+        "cd",
+        "cmbs",
+        "commercial_paper",
+        "convertible_bond",
+        "covered_bond",
+        "debt",
+        "emtn",
+        "equity",
+        "financial_guarantee",
+        "financial_sloc",
+        "frn",
+        "guarantee",
+        "index_linked",
+        "index",
+        "letter_of_credit",
+        "mbs",
+        "mtn",
+        "other",
+        "performance_bond",
+        "performance_guarantee",
+        "performance_sloc",
+        "pref_share",
+        "rmbs",
+        "rmbs_trans",
+        "share",
+        "share_agg",
+        "spv_mortgages",
+        "spv_other",
+        "struct_note",
+        "treasury",
+        "urp",
+        "warranty"
       ]
     },
     "trade_date": {
