@@ -7,9 +7,9 @@ object TypeGenerator extends PropertyBasedGenerator {
   protected val typeNameTag: String = "@typeName@"
   protected val typeTypeTag: String = "@typeType@"
 
+  // TODO generate all type inside a singe package object (e.g. Cff and MicCode)
   override def template: String =
     s"""$packageTag
-       |
        |object $classNameTag {
        |
        |  type $typeNameTag = $typeTypeTag
@@ -29,7 +29,7 @@ object TypeGenerator extends PropertyBasedGenerator {
           .replace(typeNameTag, typeName)
           .replace(typeTypeTag, typeType)
 
-        writeFilledTemplateToFile(className, generated)
+        writeFilledTemplateToFile(className, packages, generated)
 
         Option(generated)
       case _ => None

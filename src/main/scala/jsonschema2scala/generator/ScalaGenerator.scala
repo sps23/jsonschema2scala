@@ -15,11 +15,15 @@ trait ScalaGenerator extends GeneratorUtils {
   protected val enumsTag: String         = "@enums@"
 
   implicit class StringImprovements(val s: String) {
-    def replacePackages(packages: Seq[String]): String =
-      s.replace(packageTag, packages.map("package " + _).mkString("\n"))
+    def replacePackages(packages: Seq[String]): String = {
+      val toReplace = if (packages.isEmpty) "" else packages.map("package " + _).mkString("", "\n", "\n")
+      s.replace(packageTag, toReplace)
+    }
 
-    def replaceImports(imports: Seq[String]): String =
-      s.replace(importsTag, imports.mkString("\n"))
+    def replaceImports(imports: Seq[String]): String = {
+      val toReplace = if (imports.isEmpty) "" else imports.mkString("", "\n", "\n")
+      s.replace(importsTag, toReplace)
+    }
   }
 
   protected def writeInnerClassesToFiles(innerClasses: mutable.HashMap[String, String], path: String): Unit = {
@@ -31,8 +35,10 @@ trait ScalaGenerator extends GeneratorUtils {
     }
   }
 
-  protected def writeFilledTemplateToFile(className: String, filledInTemplate: String): String = {
-    val path = new File(".").getCanonicalPath
+  protected def writeFilledTemplateToFile(className: String,
+                                          packages: List[String],
+                                          filledInTemplate: String): String = {
+    val path = getOrCreateDirectory(packages).getCanonicalPath
     val pw   = new PrintWriter(new File(path + s"/$className.scala"))
     pw.write(filledInTemplate)
     pw.close()

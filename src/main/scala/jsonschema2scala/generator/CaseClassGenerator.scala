@@ -3,10 +3,7 @@ package jsonschema2scala.generator
 object CaseClassGenerator extends CommonGenerator {
 
   val template: String =
-    s"""$packageTag
-       |
-       |$importsTag
-       |
+    s"""$packageTag$importsTag
        |case class $classNameTag(
        |$attributesTag
        |)$extendsTag

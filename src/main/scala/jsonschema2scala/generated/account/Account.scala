@@ -3,8 +3,6 @@ package account
 
 import java.time.LocalDateTime
 
-import jsonschema2scala.generated.CcfType.Ccf
-
 case class Account(
     id: String,
     date: LocalDateTime,

@@ -6,10 +6,7 @@ object SimpleEnumGenerator extends EnumGenerator {
 
   override val enumTemplate: String = s"""  case object $enumClassNameTag extends $classNameTag"""
   override val template: String =
-    s"""$packageTag
-      |
-      |$importsTag
-      |
+    s"""$packageTag$importsTag
       |sealed trait $classNameTag extends EnumEntry
       |
       |object $classNameTag extends Enum[$classNameTag] {
@@ -34,7 +31,7 @@ object SimpleEnumGenerator extends EnumGenerator {
           .replace(enumsTag, enums)
           .replaceAll(classNameTag, className)
 
-        writeFilledTemplateToFile(className, generated)
+        writeFilledTemplateToFile(className, packages, generated)
 
         Option(generated)
       case _ => None

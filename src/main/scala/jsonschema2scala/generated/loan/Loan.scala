@@ -23,7 +23,7 @@ case class Loan(
     currency_code: Option[CurrencyCode],
     customer_id: Option[String],
     customers: Option[List[LoanCustomer]],
-    ccf: Option[BigDecimal],
+    ccf: Option[Ccf],
     encumbrance_amount: Option[Int],
     encumbrance_end_date: Option[LocalDateTime],
     end_date: Option[LocalDateTime],

@@ -3,10 +3,7 @@ package jsonschema2scala.generator
 object TraitGenerator extends CommonGenerator {
 
   val template: String =
-    s"""$packageTag
-       |
-       |$importsTag
-       |
+    s"""$packageTag$importsTag
        |trait $classNameTag $extendsTag {
        |$attributesTag
        |}

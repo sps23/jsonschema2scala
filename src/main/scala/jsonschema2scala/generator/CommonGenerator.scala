@@ -37,6 +37,12 @@ trait CommonGenerator extends ScalaGenerator {
     filledInTemplate
   }
 
+  def generateTop(jsonSchema: JsonSchema, packages: List[String], previous: Map[String, JsonSchema]): Option[String] = {
+    val topPackages: List[String] =
+      jsonSchema.title.fold(packages)(t => packages :+ toPackageName(toClassNameFromTitle(t)))
+    generate(jsonSchema, topPackages, previous)
+  }
+
   def generate(jsonSchema: JsonSchema,
                packages: List[String] = List.empty,
                previous: Map[String, JsonSchema] = Map.empty): Option[String] = {
@@ -96,7 +102,11 @@ trait CommonGenerator extends ScalaGenerator {
                         }
                       case (Some(_), Some(schema)) =>
                         val classNameFromAttributeName =
-                          if (attributeName.last == 's') attributeName.init else attributeName
+                          if (attributeName.last == 's') {
+                            attributeName.init
+                          } else {
+                            attributeName
+                          }
                         val innerSchemaClassName = toClassName(className, classNameFromAttributeName)
                         generate(schema.copy(title = Option(innerSchemaClassName)), packages)
                           .foreach(innerClasses.put(innerSchemaClassName, _))
@@ -120,10 +130,10 @@ trait CommonGenerator extends ScalaGenerator {
 
       val filledInTemplate: String =
         fillInTemplate(packages, imports, className, extend, attributes)
-      val path: String = writeFilledTemplateToFile(className, filledInTemplate)
+      val path: String = writeFilledTemplateToFile(className, packages, filledInTemplate)
       writeInnerClassesToFiles(innerClasses, path)
 
-      innerClasses.values.mkString("\n\n") ++ filledInTemplate
+      filledInTemplate
     })
   }
 }
@@ -139,6 +149,6 @@ object CommonGenerator {
                packages: List[String] = List.empty,
                previous: Map[String, JsonSchema]): Option[String] = {
     val generator: CommonGenerator = chooseGenerator(jsonSchema)
-    generator.generate(jsonSchema, packages, previous)
+    generator.generateTop(jsonSchema, packages, previous)
   }
 }

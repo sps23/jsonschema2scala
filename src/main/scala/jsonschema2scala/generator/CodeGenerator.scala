@@ -10,7 +10,7 @@ object CodeGenerator extends GeneratorUtils {
 
   def generateAll(jsonSchemaProperties: List[JsonSchemaProperty],
                   jsonSchemas: List[JsonSchema],
-                  packages: List[String] = List.empty): Option[String] = {
+                  packages: List[String]): Option[String] = {
 
     val refNames: Set[String] =
       jsonSchemas.flatMap(_.allOf.getOrElse(List.empty).flatMap(_.`$ref`.map(toRefName))).toSet
@@ -36,10 +36,9 @@ object CodeGenerator extends GeneratorUtils {
 
     val generatedFromProps: StringBuilder =
       jsonSchemaProperties
-        .foldLeft(StringBuilder.newBuilder)((acc, p) =>
-          PropertyBasedGenerator.generate(p, packages).fold(acc)(acc.append))
+        .foldLeft(new StringBuilder())((acc, p) => PropertyBasedGenerator.generate(p, packages).fold(acc)(acc.append))
 
-    val generatedFromSchemas: StringBuilder = iter(jsonSchemasSortedByRefs, Map.empty, StringBuilder.newBuilder)
+    val generatedFromSchemas: StringBuilder = iter(jsonSchemasSortedByRefs, Map.empty, new StringBuilder())
 
     toOptionString(generatedFromProps.append(generatedFromSchemas))
   }
