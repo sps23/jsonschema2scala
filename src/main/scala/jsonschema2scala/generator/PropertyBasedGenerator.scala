@@ -9,14 +9,10 @@ trait PropertyBasedGenerator extends ScalaGenerator {
 
 object PropertyBasedGenerator {
 
-  private[generator] def chooseGenerator(jsonSchemaProperty: JsonSchemaProperty): PropertyBasedGenerator =
-    jsonSchemaProperty.enum match {
-      case Some(_) => EnumGenerator.chooseGenerator(jsonSchemaProperty)
-      case None    => TypeGenerator
-    }
+  def generate(jsonSchemaProperties: List[JsonSchemaProperty], packages: List[String]): List[String] = {
+    val (types, enums) = jsonSchemaProperties.partition(_.`enum`.isEmpty)
 
-  def generate(jsonSchemaProperty: JsonSchemaProperty, packages: List[String]): Option[String] = {
-    val generator: PropertyBasedGenerator = chooseGenerator(jsonSchemaProperty)
-    generator.generate(jsonSchemaProperty, packages)
+    TypeGenerator.generate(types, packages) ++ enums.flatMap(e =>
+      EnumGenerator.chooseGenerator(e).generate(e, packages))
   }
 }

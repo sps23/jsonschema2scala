@@ -35,9 +35,7 @@ object CodeGenerator extends GeneratorUtils {
     }
 
     val generatedFromProps: StringBuilder =
-      jsonSchemaProperties
-        .foldLeft(new StringBuilder())((acc, p) => PropertyBasedGenerator.generate(p, packages).fold(acc)(acc.append))
-
+      PropertyBasedGenerator.generate(jsonSchemaProperties, packages).foldLeft(new StringBuilder())(_.append(_))
     val generatedFromSchemas: StringBuilder = iter(jsonSchemasSortedByRefs, Map.empty, new StringBuilder())
 
     toOptionString(generatedFromProps.append(generatedFromSchemas))
