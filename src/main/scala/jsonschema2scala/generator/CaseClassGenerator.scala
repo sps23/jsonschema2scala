@@ -4,8 +4,7 @@ object CaseClassGenerator extends CommonGenerator {
 
   val template: String =
     s"""$packageTag$importsTag
-       |case class $classNameTag(
-       |$attributesTag
+       |case class $classNameTag($attributesTag
        |)$extendsTag
        |""".stripMargin
 

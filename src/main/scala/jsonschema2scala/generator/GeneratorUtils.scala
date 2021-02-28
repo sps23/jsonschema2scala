@@ -60,6 +60,8 @@ trait GeneratorUtils {
     case other     => other
   }
 
+  def toPackageNameAll(name: String): String = toPackageName(name) + "._"
+
   def toPackageName(name: String): String = toClassName(name).toLowerCase()
 
   def toClassName(className: String, name: String): String = toName(className + "_" + name, startWithCapital = true)

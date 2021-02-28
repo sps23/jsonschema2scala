@@ -13,8 +13,8 @@ trait EnumGenerator extends PropertyBasedGenerator {
 object EnumGenerator {
 
   val imports: Seq[String] = Seq(
-    "import enumeratum._",
-    "import scala.collection.immutable.IndexedSeq"
+    "enumeratum._",
+    "scala.collection.immutable.IndexedSeq"
   )
 
   private[generator] def chooseGenerator(jsonSchemaProperty: JsonSchemaProperty): EnumGenerator = {

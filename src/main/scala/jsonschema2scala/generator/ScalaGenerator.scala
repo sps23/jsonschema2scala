@@ -21,7 +21,7 @@ trait ScalaGenerator extends GeneratorUtils {
     }
 
     def replaceImports(imports: Seq[String]): String = {
-      val toReplace = if (imports.isEmpty) "" else imports.mkString("", "\n", "\n")
+      val toReplace = if (imports.isEmpty) "" else imports.map("import " + _).mkString("", "\n", "\n")
       s.replace(importsTag, toReplace)
     }
   }

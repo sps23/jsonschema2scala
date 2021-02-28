@@ -58,6 +58,7 @@ trait CommonGenerator extends ScalaGenerator {
       }
 
       val extend: Option[String] = jsonSchema.allOf.map(_.flatMap(_.`$ref`.map(toRefName))).flatMap(_.headOption)
+      extend.foreach(e => imports.add(toPackageNameAll(e)))
 
       val inheritedProperties: List[JsonSchemaProperty] = extend match {
         case Some(e) =>
@@ -78,7 +79,7 @@ trait CommonGenerator extends ScalaGenerator {
                 val attributeName: String = toAttributeName(name)
                 val attributeType: String = t match {
                   case "string" if p.format.contains("date-time") =>
-                    imports.add("import java.time.LocalDateTime")
+                    imports.add("java.time.LocalDateTime")
                     "LocalDateTime"
                   case "string" if p.enum.isDefined =>
                     if (p.isOverride) {
@@ -95,7 +96,7 @@ trait CommonGenerator extends ScalaGenerator {
                       case (Some(pp), None) =>
                         (pp.`type`, pp.format) match {
                           case (Some("string"), Some("date-time")) =>
-                            imports.add("import java.time.LocalDateTime")
+                            imports.add("java.time.LocalDateTime")
                             "List[LocalDateTime]"
                           case (Some(tt), None) => s"List[${toClassName(tt)}]"
                           case _                => "Nothing"
