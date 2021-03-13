@@ -12,3 +12,10 @@ libraryDependencies ++= Seq(
 )
 
 mainClass in (Compile, run) := Some("jsonschema2scala.Main")
+
+addCompilerPlugin(
+  "org.wartremover" %% "wartremover" % "2.4.13" cross CrossVersion.full
+)
+//wartremoverWarnings ++= Warts.unsafe
+
+scalacOptions ++= Seq("-deprecation", "-Xlint")

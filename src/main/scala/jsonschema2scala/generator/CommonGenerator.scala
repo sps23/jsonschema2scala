@@ -43,9 +43,7 @@ trait CommonGenerator extends ScalaGenerator {
     generate(jsonSchema, topPackages, previous)
   }
 
-  def generate(jsonSchema: JsonSchema,
-               packages: List[String] = List.empty,
-               previous: Map[String, JsonSchema] = Map.empty): Option[String] = {
+  def generate(jsonSchema: JsonSchema, packages: List[String], previous: Map[String, JsonSchema]): Option[String] = {
 
     jsonSchema.title.map(title => {
       val imports: mutable.HashSet[String]              = mutable.HashSet.empty
@@ -63,7 +61,7 @@ trait CommonGenerator extends ScalaGenerator {
       val inheritedProperties: List[JsonSchemaProperty] = extend match {
         case Some(e) =>
           previous.get(e) match {
-            case Some(s) => s.properties.map(_.copy(isOverride = true))
+            case Some(s) => s.properties.map(_.copy(isOverride = Option(true)))
             case None    => List.empty
           }
         case None => List.empty
@@ -82,7 +80,7 @@ trait CommonGenerator extends ScalaGenerator {
                     imports.add("java.time.LocalDateTime")
                     "LocalDateTime"
                   case "string" if p.enum.isDefined =>
-                    if (p.isOverride) {
+                    if (p.isOverride.contains(true)) {
                       toClassName(extend.getOrElse(className), name)
                     } else {
                       val enumClassName = toClassName(className, name)
@@ -109,7 +107,9 @@ trait CommonGenerator extends ScalaGenerator {
                             attributeName
                           }
                         val innerSchemaClassName = toClassName(className, classNameFromAttributeName)
-                        generate(schema.copy(title = Option(innerSchemaClassName)), packages)
+                        generate(jsonSchema = schema.copy(title = Option(innerSchemaClassName)),
+                                 packages = packages,
+                                 previous = Map.empty[String, JsonSchema])
                           .foreach(innerClasses.put(innerSchemaClassName, _))
                         s"List[$innerSchemaClassName]"
                       case _ => s"Any // unexpected" //TODO
@@ -146,9 +146,7 @@ object CommonGenerator {
     case CaseClass => CaseClassGenerator
   }
 
-  def generate(jsonSchema: JsonSchema,
-               packages: List[String] = List.empty,
-               previous: Map[String, JsonSchema]): Option[String] = {
+  def generate(jsonSchema: JsonSchema, packages: List[String], previous: Map[String, JsonSchema]): Option[String] = {
     val generator: CommonGenerator = chooseGenerator(jsonSchema)
     generator.generateTop(jsonSchema, packages, previous)
   }

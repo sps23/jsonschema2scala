@@ -31,11 +31,11 @@ object Main extends App {
     "v1-dev/curve.json"
   )
   val jsonSchemas: List[JsonSchema] =
-    resources.flatMap(r => JsonSchema.from(parse(Source.fromResource(r).getLines().mkString).asInstanceOf[JObject]))
+    resources.flatMap(r => JsonSchema.from(parse(Source.fromResource(r).getLines().mkString)))
 
   val generated = CodeGenerator.generateAll(
     jsonSchemaProperties = commonJsonProperties.getOrElse(List.empty),
     jsonSchemas = jsonSchemas,
-    packages = List("jsonschema2scala.model.fire")
+    packages = List("jsonschema2scala.model.fire2")
   )
 }

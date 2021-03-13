@@ -11,7 +11,7 @@ case class JsonSchema(schema: Option[String],
                       properties: List[JsonSchemaProperty],
                       required: List[String],
                       additionalProperties: Boolean,
-                      scalaType: JsonSchemaScalaType = CaseClass)
+                      scalaType: JsonSchemaScalaType)
 
 object JsonSchema {
 
@@ -30,44 +30,44 @@ object JsonSchema {
     }
   }
 
-  def from(jObject: JObject): Option[JsonSchema] = {
+  def from(jValue: JValue): Option[JsonSchema] = {
 
-    val schemaParsed = (jObject \ "$schema").toOption
+    val schemaParsed: Option[JValue] = (jValue \ "$schema").toOption
     val schema = schemaParsed.collect {
       case JString(s) => s
     }
-    val titleParsed = (jObject \ "title").toOption
+    val titleParsed: Option[JValue] = (jValue \ "title").toOption
     val title: Option[String] = titleParsed.collect {
       case JString(t) => t
     }
 
-    val descriptionParsed = (jObject \ "description").toOption
+    val descriptionParsed: Option[JValue] = (jValue \ "description").toOption
     val description: Option[String] = descriptionParsed.collect {
       case JString(d) => d
     }
 
-    val typeParsed = (jObject \ "type").toOption
+    val typeParsed: Option[JValue] = (jValue \ "type").toOption
     val `type`: Option[String] = typeParsed.collect {
       case JString(t) => t
     }
 
-    val requiredParsed = (jObject \ "required").toOption
+    val requiredParsed: Option[JValue] = (jValue \ "required").toOption
     val req: Option[List[String]] = requiredParsed.collect {
       case jArray: JArray => jArray.extract[List[String]]
     }
 
-    val additionalPropertiesParsed = (jObject \ "additionalProperties").toOption
+    val additionalPropertiesParsed: Option[JValue] = (jValue \ "additionalProperties").toOption
     val add = additionalPropertiesParsed.collect {
       case JBool(a) => a
     }
 
-    val allOfParsed = (jObject \ "allOf").toOption
+    val allOfParsed: Option[JValue] = (jValue \ "allOf").toOption
     val allOf: Option[List[JsonSchemaProperty]] = allOfParsed.collect {
       case jArray: JArray => jArray.extract[List[JsonSchemaProperty]]
     }
 
     val properties: Option[List[JsonSchemaProperty]] =
-      (jObject \ "properties").toOption.flatMap(JsonSchema.propertiesFrom)
+      (jValue \ "properties").toOption.flatMap(JsonSchema.propertiesFrom)
 
     properties.map(
       p =>
@@ -79,7 +79,8 @@ object JsonSchema {
           allOf = allOf,
           properties = p,
           required = req.getOrElse(List.empty),
-          additionalProperties = add.getOrElse(false)
+          additionalProperties = add.getOrElse(false),
+          scalaType = CaseClass
       ))
   }
 }

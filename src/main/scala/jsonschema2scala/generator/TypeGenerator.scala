@@ -58,7 +58,7 @@ object TypeGenerator extends ScalaGenerator {
           .replace(typeNameTag, typeName)
           .replace(typeTypeTag, typeType)
 
-        Some(typeName, generatedType)
+        Some((typeName, generatedType))
       case _ => None
     }
   }

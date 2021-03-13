@@ -15,7 +15,7 @@ case class JsonSchemaProperty(name: Option[String],
                               uniqueItems: Option[Boolean],
                               schema: Option[JsonSchema],
                               property: Option[JsonSchemaProperty],
-                              isOverride: Boolean = false)
+                              isOverride: Option[Boolean])
 
 object JsonSchemaProperty {
 
