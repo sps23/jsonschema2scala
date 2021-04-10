@@ -2,7 +2,7 @@ name := "jsonschema2scala"
 
 version := "1.0"
 
-scalaVersion := "2.13.4"
+scalaVersion := "2.13.5"
 
 libraryDependencies ++= Seq(
   "com.beachape"  %% "enumeratum"     % "1.6.1",
@@ -18,4 +18,6 @@ addCompilerPlugin(
 )
 //wartremoverWarnings ++= Warts.unsafe
 
-scalacOptions ++= Seq("-deprecation", "-Xlint")
+scalacOptions ++= Seq("-deprecation", "-Xlint", "-target:jvm-11")
+
+javacOptions ++= Seq("-source", "11", "-target", "11")
