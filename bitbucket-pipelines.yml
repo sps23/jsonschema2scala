@@ -1,4 +1,4 @@
-image: bitbucketpipelines/scala-sbt:scala-2.12
+image: sps23/scala-sbt-build:11.0.10-jdk-buster_2.13.5_1.5.0
 
 pipelines:
   default: 

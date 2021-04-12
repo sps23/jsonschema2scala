@@ -1,6 +1,6 @@
 name := "jsonschema2scala"
 
-version := "1.0"
+version := "2.0"
 
 scalaVersion := "2.13.5"
 
@@ -11,7 +11,8 @@ libraryDependencies ++= Seq(
   "org.scalatest" %% "scalatest"      % "3.2.3" % "test"
 )
 
-mainClass in (Compile, run) := Some("jsonschema2scala.Main")
+Compile / mainClass := Some("jsonschema2scala.Main")
+run / mainClass := Some("jsonschema2scala.Main")
 
 addCompilerPlugin(
   "org.wartremover" %% "wartremover" % "2.4.13" cross CrossVersion.full
