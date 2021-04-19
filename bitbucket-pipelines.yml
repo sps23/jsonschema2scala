@@ -1,4 +1,5 @@
 image: sps23/scala-sbt-build:11.0.10-jdk-buster_2.13.5_1.5.0
+#image: sps23/scala-sbt-build:11.0.10-jdk-buster_3.0.0-RC2_1.5.0
 
 pipelines:
   default: 
